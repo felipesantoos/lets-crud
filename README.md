@@ -36,3 +36,33 @@ Um CRUD feito em Go.
 ```
 ## Deletar um cliente específico
 > **DELETE** http://localhost:3000/customer/:id
+
+# Objetivos
+- [ ] Criar esquema do banco de dados.
+- [ ] Criar endpoints.
+	- [x] Criar rotas.
+	- [ ] Criar handlers.
+- [ ] Criar service.
+	- [ ] Criar interfaces.
+	- [ ] Implementar métodos.
+- [ ] Criar repository.
+	- [ ] Criar interface.
+	- [ ] Implementar métodos.
+
+# Configuração do banco de dados
+```bash
+go get -u github.com/go-sql-driver/mysql
+sudo mysql
+```
+```sql
+DROP DATABASE IF EXISTS letscrud;
+CREATE DATABASE letscrud;
+USE letscrud;
+
+CREATE TABLE customer (
+    id SERIAL PRIMARY KEY,
+    cpf VARCHAR(11) UNIQUE NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    birthDate DATE
+);
+```

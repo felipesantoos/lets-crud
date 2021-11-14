@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"letscrud/domain/dtos"
 	"letscrud/services"
 	"letscrud/services/interfaces"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -22,9 +24,14 @@ func NewCustomerHandler() *CustomerHandler {
 func (ch CustomerHandler) CreateNewCustomer(c echo.Context) error {
 	log.Println("Handler: CreateNewCustomer")
 
-	ch.service.CreateNewCustomer()
+	customer := new(dtos.CustomerDTO)
+	if err := c.Bind(customer); err != nil {
+		log.Println("Handler (CreateNewCustomer): " + err.Error())
+	}
 
-	return c.String(http.StatusOK, "Create a new customer")
+	lastInsertId := ch.service.CreateNewCustomer(*customer)
+
+	return c.String(http.StatusOK, strconv.FormatInt(lastInsertId, 10))
 }
 
 func (ch CustomerHandler) ReadAllCustomers(c echo.Context) error {

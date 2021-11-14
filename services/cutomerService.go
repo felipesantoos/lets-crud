@@ -3,7 +3,9 @@ package services
 import (
 	"letscrud/data/interfaces"
 	repository "letscrud/data/respository"
+	"letscrud/domain/dtos"
 	"log"
+	"strings"
 )
 
 type CustomerService struct {
@@ -16,10 +18,15 @@ func NewCustomerService() *CustomerService {
 	return &CustomerService{repository: repository}
 }
 
-func (cs CustomerService) CreateNewCustomer() {
+func (cs CustomerService) CreateNewCustomer(customer dtos.CustomerDTO) int64 {
 	log.Println("Service: CreateNewCustomer")
 
-	cs.repository.CreateNewCustomer()
+	customer.CPF = strings.Replace(customer.CPF, ".", "", -1)
+	customer.CPF = strings.Replace(customer.CPF, "-", "", -1)
+
+	lastInsertId := cs.repository.CreateNewCustomer(customer)
+
+	return lastInsertId
 }
 
 func (cs CustomerService) ReadAllCustomers() {
