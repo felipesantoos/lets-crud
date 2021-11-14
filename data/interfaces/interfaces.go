@@ -5,7 +5,7 @@ import (
 )
 
 type ICustomerRepository interface {
-	CreateNewCustomer(dtos.CustomerDTO) int64
+	CreateNewCustomer(dtos.CustomerDTO) (int64, error)
 	ReadAllCustomers()
 	ReadCustomerById()
 	UpdateCustomerById()

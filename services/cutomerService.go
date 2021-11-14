@@ -24,7 +24,7 @@ func (cs CustomerService) CreateNewCustomer(customer dtos.CustomerDTO) int64 {
 	customer.CPF = strings.Replace(customer.CPF, ".", "", -1)
 	customer.CPF = strings.Replace(customer.CPF, "-", "", -1)
 
-	lastInsertId := cs.repository.CreateNewCustomer(customer)
+	lastInsertId, _ := cs.repository.CreateNewCustomer(customer)
 
 	return lastInsertId
 }

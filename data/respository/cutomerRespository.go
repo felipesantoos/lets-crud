@@ -13,7 +13,7 @@ func NewCustomerRepository() *CustomerRepository {
 	return &CustomerRepository{}
 }
 
-func (cr CustomerRepository) CreateNewCustomer(customer dtos.CustomerDTO) int64 {
+func (cr CustomerRepository) CreateNewCustomer(customer dtos.CustomerDTO) (int64, error) {
 	log.Println("Repository: CreateNewCustomer")
 
 	conn, err := db.GetConnection()
@@ -27,6 +27,8 @@ func (cr CustomerRepository) CreateNewCustomer(customer dtos.CustomerDTO) int64 
 	res, err := conn.Exec(sql, customer.CPF, customer.Name, customer.BirthDate)
 	if err != nil {
 		log.Println("Repository (CreateNewCustomer): " + err.Error())
+
+		return 0, err
 	}
 
 	lastInsertId, err := res.LastInsertId()
@@ -34,7 +36,7 @@ func (cr CustomerRepository) CreateNewCustomer(customer dtos.CustomerDTO) int64 
 		log.Println("Repository (CreateNewCustomer): " + err.Error())
 	}
 
-	return lastInsertId
+	return lastInsertId, nil
 }
 
 func (cr CustomerRepository) ReadAllCustomers() {
