@@ -1,12 +1,11 @@
 package handlers
 
 import (
-	"letscrud/domain/dtos"
+	"letscrud/endpoints/request"
 	"letscrud/services"
 	"letscrud/services/interfaces"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -24,22 +23,41 @@ func NewCustomerHandler() *CustomerHandler {
 func (ch CustomerHandler) CreateNewCustomer(c echo.Context) error {
 	log.Println("Handler: CreateNewCustomer")
 
-	customer := new(dtos.CustomerDTO)
+	customer := new(request.CustomerRequest)
 	if err := c.Bind(customer); err != nil {
 		log.Println("Handler (CreateNewCustomer): " + err.Error())
 	}
 
-	lastInsertId := ch.service.CreateNewCustomer(*customer)
+	lastInsertId, apiErr := ch.service.CreateNewCustomer(*customer)
 
-	return c.String(http.StatusOK, strconv.FormatInt(lastInsertId, 10))
+	if apiErr != nil {
+		response := map[string]interface{}{
+			"error": apiErr.Message,
+		}
+
+		return c.JSON(apiErr.StatusCode, response)
+	}
+
+	response := map[string]interface{}{
+		"id": lastInsertId,
+	}
+
+	return c.JSON(http.StatusCreated, response)
 }
 
 func (ch CustomerHandler) ReadAllCustomers(c echo.Context) error {
 	log.Println("Handler: ReadAllCustomers")
 
-	ch.service.ReadAllCustomers()
+	customerList, apiErr := ch.service.ReadAllCustomers()
+	if apiErr != nil {
+		response := map[string]interface{}{
+			"error": apiErr.Message,
+		}
 
-	return c.String(http.StatusOK, "Read all customers")
+		return c.JSON(apiErr.StatusCode, response)
+	}
+
+	return c.JSON(http.StatusOK, customerList)
 }
 
 func (ch CustomerHandler) ReadCustomerById(c echo.Context) error {

@@ -1,6 +1,6 @@
-package dtos
+package request
 
-type CustomerDTO struct {
+type CustomerRequest struct {
 	CPF       string `json:"cpf"`
 	Name      string `json:"name"`
 	BirthDate string `json:"birthDate"`

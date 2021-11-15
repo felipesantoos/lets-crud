@@ -4,15 +4,12 @@ import (
 	"strings"
 )
 
-func GetNotificationErrs(err error) *ApiErros {
+func GetCustomerError(err error) *ApiError {
 	errMsg := err.Error()
 
 	if strings.Contains(errMsg, "Duplicate entry") && strings.Contains(errMsg, "cpf") {
-		return &ApiErros{
-			StatusCode: 400,
-			Message:    "",
-		}
+		return NewBadRequestError("O CPF informádo já existe no banco de dados!")
 	}
 
-	return nil
+	return NewUnexpectedError("Ocorreu um erro inesperado: " + errMsg)
 }

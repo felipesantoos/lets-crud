@@ -2,8 +2,9 @@ package repository
 
 import (
 	"letscrud/data/db"
-	"letscrud/domain/dtos"
+	"letscrud/domain/errs"
 	"letscrud/domain/models"
+	"letscrud/endpoints/request"
 	"log"
 )
 
@@ -13,12 +14,15 @@ func NewCustomerRepository() *CustomerRepository {
 	return &CustomerRepository{}
 }
 
-func (cr CustomerRepository) CreateNewCustomer(customer dtos.CustomerDTO) (int64, error) {
+func (cr CustomerRepository) CreateNewCustomer(customer request.CustomerRequest) (int64, *errs.ApiError) {
 	log.Println("Repository: CreateNewCustomer")
 
 	conn, err := db.GetConnection()
 	if err != nil {
 		log.Println("Repository (CreateNewCustomer): " + err.Error())
+		apiError := errs.GetCustomerError(err)
+
+		return 0, apiError
 	}
 	defer conn.Close()
 
@@ -27,24 +31,31 @@ func (cr CustomerRepository) CreateNewCustomer(customer dtos.CustomerDTO) (int64
 	res, err := conn.Exec(sql, customer.CPF, customer.Name, customer.BirthDate)
 	if err != nil {
 		log.Println("Repository (CreateNewCustomer): " + err.Error())
+		apiError := errs.GetCustomerError(err)
 
-		return 0, err
+		return 0, apiError
 	}
 
 	lastInsertId, err := res.LastInsertId()
 	if err != nil {
 		log.Println("Repository (CreateNewCustomer): " + err.Error())
+		apiError := errs.GetCustomerError(err)
+
+		return 0, apiError
 	}
 
 	return lastInsertId, nil
 }
 
-func (cr CustomerRepository) ReadAllCustomers() {
+func (cr CustomerRepository) ReadAllCustomers() ([]models.Customer, *errs.ApiError) {
 	log.Println("Repository: ReadAllCustomers")
 
 	conn, err := db.GetConnection()
 	if err != nil {
 		log.Println("Repository (ReadAllCustomers): " + err.Error())
+		apiError := errs.GetCustomerError(err)
+
+		return nil, apiError
 	}
 
 	sql := "SELECT * FROM customer"
@@ -52,8 +63,13 @@ func (cr CustomerRepository) ReadAllCustomers() {
 	res, err := conn.Query(sql)
 	if err != nil {
 		log.Println("Repository (ReadAllCustomers): " + err.Error())
+		apiError := errs.GetCustomerError(err)
+
+		return nil, apiError
 	}
 	defer res.Close()
+
+	customerList := []models.Customer{}
 
 	for res.Next() {
 		var customer models.Customer
@@ -61,10 +77,15 @@ func (cr CustomerRepository) ReadAllCustomers() {
 		err = res.Scan(&customer.Id, &customer.CPF, &customer.Name, &customer.BirthDate)
 		if err != nil {
 			log.Println("Repository (ReadAllCustomers): " + err.Error())
+			apiError := errs.GetCustomerError(err)
+
+			return nil, apiError
 		}
 
-		log.Println(customer)
+		customerList = append(customerList, customer)
 	}
+
+	return customerList, nil
 }
 
 func (cr CustomerRepository) ReadCustomerById() {

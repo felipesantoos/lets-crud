@@ -1,12 +1,14 @@
 package interfaces
 
 import (
-	"letscrud/domain/dtos"
+	"letscrud/domain/errs"
+	"letscrud/endpoints/request"
+	"letscrud/endpoints/response"
 )
 
 type ICustomerService interface {
-	CreateNewCustomer(dtos.CustomerDTO) int64
-	ReadAllCustomers()
+	CreateNewCustomer(request.CustomerRequest) (int64, *errs.ApiError)
+	ReadAllCustomers() ([]response.CustomerResponse, *errs.ApiError)
 	ReadCustomerById()
 	UpdateCustomerById()
 	DeleteCustomerById()

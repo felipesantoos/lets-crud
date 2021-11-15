@@ -3,7 +3,9 @@ package services
 import (
 	"letscrud/data/interfaces"
 	repository "letscrud/data/respository"
-	"letscrud/domain/dtos"
+	"letscrud/domain/errs"
+	"letscrud/endpoints/request"
+	"letscrud/endpoints/response"
 	"log"
 	"strings"
 )
@@ -18,21 +20,31 @@ func NewCustomerService() *CustomerService {
 	return &CustomerService{repository: repository}
 }
 
-func (cs CustomerService) CreateNewCustomer(customer dtos.CustomerDTO) int64 {
+func (cs CustomerService) CreateNewCustomer(customer request.CustomerRequest) (int64, *errs.ApiError) {
 	log.Println("Service: CreateNewCustomer")
 
 	customer.CPF = strings.Replace(customer.CPF, ".", "", -1)
 	customer.CPF = strings.Replace(customer.CPF, "-", "", -1)
 
-	lastInsertId, _ := cs.repository.CreateNewCustomer(customer)
+	lastInsertId, apiErr := cs.repository.CreateNewCustomer(customer)
 
-	return lastInsertId
+	return lastInsertId, apiErr
 }
 
-func (cs CustomerService) ReadAllCustomers() {
+func (cs CustomerService) ReadAllCustomers() ([]response.CustomerResponse, *errs.ApiError) {
 	log.Println("Service: ReadAllCustomers")
 
-	cs.repository.ReadAllCustomers()
+	customerList, apiErr := cs.repository.ReadAllCustomers()
+	if apiErr != nil {
+		return nil, apiErr
+	}
+
+	var responseList []response.CustomerResponse
+	for _, customer := range customerList {
+		responseList = append(responseList, customer.ConvertToDTO())
+	}
+
+	return responseList, apiErr
 }
 
 func (cs CustomerService) ReadCustomerById() {
