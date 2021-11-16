@@ -6,6 +6,7 @@ import (
 	"letscrud/domain/errs"
 	"letscrud/endpoints/dto/request"
 	"letscrud/endpoints/dto/response"
+	"letscrud/services/utils"
 	"log"
 	"strings"
 )
@@ -41,6 +42,8 @@ func (cs CustomerService) ReadAllCustomers() ([]response.CustomerResponse, *errs
 
 	var responseList []response.CustomerResponse
 	for _, customer := range customerList {
+		customer.CPF = utils.FormatCPF_AddPunctuation(customer.CPF)
+
 		responseList = append(responseList, customer.ConvertToDTO())
 	}
 
@@ -55,19 +58,33 @@ func (cs CustomerService) ReadCustomerById(id int64) (*response.CustomerResponse
 		return nil, apiError
 	}
 
+	customer.CPF = utils.FormatCPF_AddPunctuation(customer.CPF)
+
 	response := customer.ConvertToDTO()
 
 	return &response, nil
 }
 
-func (cs CustomerService) UpdateCustomerById(id int64, customerRequest request.CustomerRequest) {
+func (cs CustomerService) UpdateCustomerById(id int64, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
 	log.Println("Service: UpdateCustomerById")
 
-	cs.repository.UpdateCustomerById(id, customerRequest)
+	customerRequest.CPF = utils.FormatCPF_RemovePunctuation(customerRequest.CPF)
+
+	isUpdated, apiError := cs.repository.UpdateCustomerById(id, customerRequest)
+	if apiError != nil {
+		return false, apiError
+	}
+
+	return isUpdated, nil
 }
 
-func (cs CustomerService) DeleteCustomerById() {
+func (cs CustomerService) DeleteCustomerById(id int64) (bool, *errs.ApiError) {
 	log.Println("Service: DeleteCustomerById")
 
-	cs.repository.DeleteCustomerById()
+	isDeleted, apiError := cs.repository.DeleteCustomerById(id)
+	if apiError != nil {
+		return false, apiError
+	}
+
+	return isDeleted, nil
 }

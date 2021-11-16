@@ -22,11 +22,11 @@ func NewCustomerHandler() *CustomerHandler {
 }
 
 func (ch CustomerHandler) CreateNewCustomer(c echo.Context) error {
-	log.Println("Handler: CreateNewCustomer")
+	log.Println("H [CreateNewCustomer]")
 
 	customer := new(request.CustomerRequest)
 	if err := c.Bind(customer); err != nil {
-		log.Println("Handler (CreateNewCustomer): " + err.Error())
+		log.Println("H [CreateNewCustomer]: " + err.Error())
 	}
 
 	lastInsertId, apiErr := ch.service.CreateNewCustomer(*customer)
@@ -47,7 +47,7 @@ func (ch CustomerHandler) CreateNewCustomer(c echo.Context) error {
 }
 
 func (ch CustomerHandler) ReadAllCustomers(c echo.Context) error {
-	log.Println("Handler: ReadAllCustomers")
+	log.Println("H [ReadAllCustomers]")
 
 	customerList, apiErr := ch.service.ReadAllCustomers()
 	if apiErr != nil {
@@ -62,7 +62,7 @@ func (ch CustomerHandler) ReadAllCustomers(c echo.Context) error {
 }
 
 func (ch CustomerHandler) ReadCustomerById(c echo.Context) error {
-	log.Println("Handler: ReadCustomerById")
+	log.Println("H [ReadCustomerById]")
 
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -104,17 +104,49 @@ func (ch CustomerHandler) UpdateCustomerById(c echo.Context) error {
 	if err := c.Bind(customer); err != nil {
 		log.Println("H [UpdateCustomerById]: " + err.Error())
 
+		response := map[string]string{
+			"error": "Os dados informados são inválidos!",
+		}
+
+		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	ch.service.UpdateCustomerById(id, *customer)
+	isUpdated, apiError := ch.service.UpdateCustomerById(id, *customer)
+	if apiError != nil {
+		response := map[string]string{
+			"error": apiError.Message,
+		}
 
-	return c.String(http.StatusOK, "Update a specific customer")
+		return c.JSON(apiError.StatusCode, response)
+	}
+
+	response := map[string]bool{
+		"isUpdated": isUpdated,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func (ch CustomerHandler) DeleteCustomerById(c echo.Context) error {
-	log.Println("Handler: DeleteCustomerById")
+	log.Println("H [DeleteCustomerById]")
 
-	ch.service.DeleteCustomerById()
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		log.Println("H [DeleteCustomerById]: " + err.Error())
+	}
 
-	return c.String(http.StatusOK, "Delete a specific customer")
+	isDeleted, apiError := ch.service.DeleteCustomerById(id)
+	if apiError != nil {
+		response := map[string]string{
+			"error": apiError.Message,
+		}
+
+		return c.JSON(apiError.StatusCode, response)
+	}
+
+	response := map[string]bool{
+		"isDeleted": isDeleted,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
