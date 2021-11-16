@@ -4,8 +4,8 @@ import (
 	"letscrud/data/interfaces"
 	repository "letscrud/data/respository"
 	"letscrud/domain/errs"
-	"letscrud/endpoints/request"
-	"letscrud/endpoints/response"
+	"letscrud/endpoints/dto/request"
+	"letscrud/endpoints/dto/response"
 	"log"
 	"strings"
 )
@@ -21,7 +21,7 @@ func NewCustomerService() *CustomerService {
 }
 
 func (cs CustomerService) CreateNewCustomer(customer request.CustomerRequest) (int64, *errs.ApiError) {
-	log.Println("Service: CreateNewCustomer")
+	log.Println("S [CreateNewCustomer]")
 
 	customer.CPF = strings.Replace(customer.CPF, ".", "", -1)
 	customer.CPF = strings.Replace(customer.CPF, "-", "", -1)
@@ -32,7 +32,7 @@ func (cs CustomerService) CreateNewCustomer(customer request.CustomerRequest) (i
 }
 
 func (cs CustomerService) ReadAllCustomers() ([]response.CustomerResponse, *errs.ApiError) {
-	log.Println("Service: ReadAllCustomers")
+	log.Println("S [ReadAllCustomers]")
 
 	customerList, apiErr := cs.repository.ReadAllCustomers()
 	if apiErr != nil {
@@ -47,16 +47,23 @@ func (cs CustomerService) ReadAllCustomers() ([]response.CustomerResponse, *errs
 	return responseList, apiErr
 }
 
-func (cs CustomerService) ReadCustomerById() {
-	log.Println("Service: ReadCustomerById")
+func (cs CustomerService) ReadCustomerById(id int64) (*response.CustomerResponse, *errs.ApiError) {
+	log.Println("S [ReadCustomerById]")
 
-	cs.repository.ReadCustomerById()
+	customer, apiError := cs.repository.ReadCustomerById(id)
+	if apiError != nil {
+		return nil, apiError
+	}
+
+	response := customer.ConvertToDTO()
+
+	return &response, nil
 }
 
-func (cs CustomerService) UpdateCustomerById() {
+func (cs CustomerService) UpdateCustomerById(id int64, customerRequest request.CustomerRequest) {
 	log.Println("Service: UpdateCustomerById")
 
-	cs.repository.UpdateCustomerById()
+	cs.repository.UpdateCustomerById(id, customerRequest)
 }
 
 func (cs CustomerService) DeleteCustomerById() {

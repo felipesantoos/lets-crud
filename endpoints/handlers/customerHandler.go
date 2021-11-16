@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	"letscrud/endpoints/request"
+	"letscrud/endpoints/dto/request"
 	"letscrud/services"
 	"letscrud/services/interfaces"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -31,7 +32,7 @@ func (ch CustomerHandler) CreateNewCustomer(c echo.Context) error {
 	lastInsertId, apiErr := ch.service.CreateNewCustomer(*customer)
 
 	if apiErr != nil {
-		response := map[string]interface{}{
+		response := map[string]string{
 			"error": apiErr.Message,
 		}
 
@@ -50,7 +51,7 @@ func (ch CustomerHandler) ReadAllCustomers(c echo.Context) error {
 
 	customerList, apiErr := ch.service.ReadAllCustomers()
 	if apiErr != nil {
-		response := map[string]interface{}{
+		response := map[string]string{
 			"error": apiErr.Message,
 		}
 
@@ -63,15 +64,49 @@ func (ch CustomerHandler) ReadAllCustomers(c echo.Context) error {
 func (ch CustomerHandler) ReadCustomerById(c echo.Context) error {
 	log.Println("Handler: ReadCustomerById")
 
-	ch.service.ReadCustomerById()
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		log.Println("H [ReadCustomerById]: " + err.Error())
+		response := map[string]string{
+			"error": "Verifique o tipo do dado informado no parâmentro :id.",
+		}
 
-	return c.String(http.StatusOK, "Read a specific customer")
+		return c.JSON(http.StatusUnprocessableEntity, response)
+	}
+
+	customer, apiError := ch.service.ReadCustomerById(id)
+	if apiError != nil {
+		response := map[string]string{
+			"error": apiError.Message,
+		}
+
+		return c.JSON(apiError.StatusCode, response)
+	}
+
+	return c.JSON(http.StatusOK, customer)
 }
 
 func (ch CustomerHandler) UpdateCustomerById(c echo.Context) error {
-	log.Println("Handler: UpdateCustomerById")
+	log.Println("H [UpdateCustomerById]")
 
-	ch.service.UpdateCustomerById()
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		log.Println("H [UpdateCustomerById]: " + err.Error())
+
+		response := map[string]string{
+			"error": "Verifique o tipo do dado informado no parâmetro :id.",
+		}
+
+		return c.JSON(http.StatusUnprocessableEntity, response)
+	}
+
+	customer := new(request.CustomerRequest)
+	if err := c.Bind(customer); err != nil {
+		log.Println("H [UpdateCustomerById]: " + err.Error())
+
+	}
+
+	ch.service.UpdateCustomerById(id, *customer)
 
 	return c.String(http.StatusOK, "Update a specific customer")
 }
