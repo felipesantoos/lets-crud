@@ -38,39 +38,39 @@ Um CRUD feito em Go.
 > **DELETE** http://localhost:3000/customer/:id
 
 # Objetivos
-- [x]  Criar o esquema do banco de dados.
-- [x]  Criar banco de dados no MySQL.
-- [x]  Criar conexão com o banco de dados.
-- [ ]  Criar domain.
-    - [x]  Criar models.
-    - [x]  Tratar erros.
-- [ ]  Criar repositories.
-    - [x]  Criar interfaces.
-    - [ ]  Implementar métodos.
-        - [x]  Criar cliente.
-        - [x]  Listar todos os clientes.
-        - [x]  Listar um cliente específico.
-        - [ ]  Atualizar um cliente específico.
-        - [ ]  Remover um cliente específico.
-- [ ]  Criar services.
-    - [x]  Criar interfaces.
-    - [ ]  Implementar métodos.
-        - [x]  Criar cliente.
-        - [x]  Listar todos os clientes.
-        - [x]  Listar um cliente específico.
-        - [ ]  Atualizar um cliente específico.
-        - [ ]  Remover um cliente específico.
-- [ ]  Criar endpoints.
-    - [x]  Criar rotas.
-    - [ ]  Criar handlers.
-        - [x]  Criar cliente.
-        - [x]  Listar todos os clientes.
-        - [x]  Listar um cliente específico.
-        - [ ]  Atualizar um cliente específico.
-        - [ ]  Remover um cliente específico.
-    - [ ]  Criar DTOs.
-        - [x]  Criar requests.
-        - [x]  Criar responses.
+- [x] Criar o esquema do banco de dados.
+- [x] Criar banco de dados no MySQL.
+- [x] Criar conexão com o banco de dados.
+- [x] Criar domain.
+    - [x] Criar models.
+    - [x] Tratar erros.
+- [x] Criar repositories.
+    - [x] Criar interfaces.
+    - [x] Implementar métodos.
+        - [x] Criar cliente.
+        - [x] Listar todos os clientes.
+        - [x] Listar um cliente específico.
+        - [x] Atualizar um cliente específico.
+        - [x] Remover um cliente específico.
+- [x] Criar services.
+    - [x] Criar interfaces.
+    - [x] Implementar métodos.
+        - [x] Criar cliente.
+        - [x] Listar todos os clientes.
+        - [x] Listar um cliente específico.
+        - [ ] Atualizar um cliente específico.
+        - [x] Remover um cliente específico.
+- [x] Criar endpoints.
+    - [x] Criar rotas.
+    - [ ] Criar handlers.
+        - [x] Criar cliente.
+        - [x] Listar todos os clientes.
+        - [x] Listar um cliente específico.
+        - [x] Atualizar um cliente específico.
+        - [x] Remover um cliente específico.
+    - [x] Criar DTOs.
+        - [x] Criar requests.
+        - [x] Criar responses.
 
 # Configuração do banco de dados
 ```bash
