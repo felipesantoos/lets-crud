@@ -57,6 +57,7 @@ func (cr CustomerRepository) ReadAllCustomers() ([]models.Customer, *errs.ApiErr
 
 		return nil, apiError
 	}
+	defer conn.Close()
 
 	sql := "SELECT * FROM customer"
 
@@ -67,7 +68,6 @@ func (cr CustomerRepository) ReadAllCustomers() ([]models.Customer, *errs.ApiErr
 
 		return nil, apiError
 	}
-	defer res.Close()
 
 	customerList := []models.Customer{}
 
@@ -85,22 +85,29 @@ func (cr CustomerRepository) ReadAllCustomers() ([]models.Customer, *errs.ApiErr
 		customerList = append(customerList, customer)
 	}
 
+	if len(customerList) == 0 {
+		apiError := errs.NewBadRequestError("Dados solicitados não encontrados!")
+
+		return nil, apiError
+	}
+
 	return customerList, nil
 }
 
 func (cr CustomerRepository) ReadCustomerById(id int64) (*models.Customer, *errs.ApiError) {
 	log.Println("R [ReadCustomerById]")
 
-	con, err := db.GetConnection()
+	conn, err := db.GetConnection()
 	if err != nil {
 		log.Println("R [ReadCustomerById]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
 
 		return nil, apiError
 	}
+	defer conn.Close()
 
 	sql := "SELECT * FROM customer WHERE id = ?"
-	res, err := con.Query(sql, id)
+	res, err := conn.Query(sql, id)
 	if err != nil {
 		log.Println("R [ReadCustomerById]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
@@ -131,16 +138,17 @@ func (cr CustomerRepository) ReadCustomerById(id int64) (*models.Customer, *errs
 func (cr CustomerRepository) UpdateCustomerById(id int64, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
 	log.Println("R [UpdateCustomerById]")
 
-	con, err := db.GetConnection()
+	conn, err := db.GetConnection()
 	if err != nil {
 		log.Println("R [UpdateCustomerById]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
 
 		return false, apiError
 	}
+	defer conn.Close()
 
 	sql := "UPDATE customer SET CPF = ?, name = ?, birthDate = ? WHERE id = ?"
-	stmt, err := con.Prepare(sql)
+	stmt, err := conn.Prepare(sql)
 	if err != nil {
 		log.Println("R [UpdateCustomerById]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
@@ -159,6 +167,9 @@ func (cr CustomerRepository) UpdateCustomerById(id int64, customerRequest reques
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
 		log.Println("R [UpdateCustomerById]: " + err.Error())
+		apiError := errs.GetCustomerError(err)
+
+		return false, apiError
 	}
 
 	if rowsAffected == 0 {
@@ -171,16 +182,17 @@ func (cr CustomerRepository) UpdateCustomerById(id int64, customerRequest reques
 func (cr CustomerRepository) DeleteCustomerById(id int64) (bool, *errs.ApiError) {
 	log.Println("R [DeleteCustomerById]")
 
-	con, err := db.GetConnection()
+	conn, err := db.GetConnection()
 	if err != nil {
 		log.Println("R [DeleteCustomerById]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
 
 		return false, apiError
 	}
+	defer conn.Close()
 
 	sql := "DELETE FROM customer WHERE id = ?"
-	stmt, err := con.Prepare(sql)
+	stmt, err := conn.Prepare(sql)
 	if err != nil {
 		log.Println("R [DeleteCustomerById]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
