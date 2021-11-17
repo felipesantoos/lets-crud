@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"letscrud/data/db"
 	"letscrud/domain/errs"
 	"letscrud/domain/models"
@@ -86,7 +87,7 @@ func (cr CustomerRepository) ReadAllCustomers() ([]models.Customer, *errs.ApiErr
 	}
 
 	if len(customerList) == 0 {
-		apiError := errs.NewBadRequestError("Dados solicitados não encontrados!")
+		apiError := errs.NewBadRequestError("Nenhum registro foi retornado!")
 
 		return nil, apiError
 	}
@@ -128,8 +129,9 @@ func (cr CustomerRepository) ReadCustomerById(id int64) (*models.Customer, *errs
 	}
 
 	if customer.Id == 0 {
-		log.Println("R [ReadCustomerById]: Dados solicitados não encontrados!")
-		return nil, errs.NewBadRequestError("Dados solicitados não encontrados!")
+		apiError := errs.NewBadRequestError("O cliente informado não foi encontrado!")
+
+		return nil, apiError
 	}
 
 	return customer, nil
@@ -161,6 +163,7 @@ func (cr CustomerRepository) UpdateCustomerById(id int64, customerRequest reques
 		log.Println("R [UpdateCustomerById]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
 
+		log.Println(stmt)
 		return false, apiError
 	}
 
@@ -173,7 +176,13 @@ func (cr CustomerRepository) UpdateCustomerById(id int64, customerRequest reques
 	}
 
 	if rowsAffected == 0 {
-		return false, nil
+		errorNotFound := "O cliente informado não foi encontrado"
+		errorIdenticalData := "os dados informados são idênticos aos já cadastrados!"
+		errorMessage := fmt.Sprintf("%s ou %s", errorNotFound, errorIdenticalData)
+
+		apiError := errs.NewBadRequestError(errorMessage)
+
+		return false, apiError
 	}
 
 	return true, nil

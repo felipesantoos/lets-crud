@@ -8,7 +8,6 @@ import (
 	"letscrud/endpoints/dto/response"
 	"letscrud/services/utils"
 	"log"
-	"strings"
 )
 
 type CustomerService struct {
@@ -24,8 +23,11 @@ func NewCustomerService() *CustomerService {
 func (cs CustomerService) CreateNewCustomer(customer request.CustomerRequest) (int64, *errs.ApiError) {
 	log.Println("S [CreateNewCustomer]")
 
-	customer.CPF = strings.Replace(customer.CPF, ".", "", -1)
-	customer.CPF = strings.Replace(customer.CPF, "-", "", -1)
+	customer.CPF = utils.FormatCPF_RemovePunctuation(customer.CPF)
+
+	if !utils.IsValidCPF(customer.CPF) {
+		return 0, errs.NewBadRequestError("O CPF informado é inválido!")
+	}
 
 	lastInsertId, apiErr := cs.repository.CreateNewCustomer(customer)
 

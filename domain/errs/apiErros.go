@@ -9,26 +9,26 @@ type ApiError struct {
 	Message    string
 }
 
-func NewBadRequestError(msg string) *ApiError {
-	return &ApiError{http.StatusBadRequest, msg}
+func NewBadRequestError(message string) *ApiError {
+	return &ApiError{http.StatusBadRequest, message}
 }
 
-func NewNotFoundError(msg string) *ApiError {
-	return &ApiError{http.StatusNotFound, msg}
+func NewNotFoundError(message string) *ApiError {
+	return &ApiError{http.StatusNotFound, message}
 }
 
-func NewUnauthorizedError(msg string) *ApiError {
-	return &ApiError{http.StatusUnauthorized, msg}
+func NewUnauthorizedError(message string) *ApiError {
+	return &ApiError{http.StatusUnauthorized, message}
 }
 
-func NewForbiddenError(msg string) *ApiError {
-	return &ApiError{http.StatusForbidden, msg}
+func NewForbiddenError(message string) *ApiError {
+	return &ApiError{http.StatusForbidden, message}
 }
 
-func NewUnprocessableEntityError(msg string) *ApiError {
-	return &ApiError{http.StatusUnprocessableEntity, msg}
+func NewUnprocessableEntityError(message string) *ApiError {
+	return &ApiError{http.StatusUnprocessableEntity, message}
 }
 
-func NewUnexpectedError(msg string) *ApiError {
-	return &ApiError{http.StatusInternalServerError, msg}
+func NewUnexpectedError(message string) *ApiError {
+	return &ApiError{http.StatusInternalServerError, message}
 }

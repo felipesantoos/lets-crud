@@ -89,3 +89,13 @@ CREATE TABLE customer (
     birthDate DATE
 );
 ```
+
+# Tasks
+- [x] Testar manualmente cada um dos métodos.
+- [x] Mudar mensagem do CPF já existente.
+- [x] Atualizar mensagens de erro.
+- [x] Mudar msg para message.
+- [x] Validar CPF no service.
+- [ ] Criar os testes da camada de repository.
+- [ ] Criar os testes da camada de service.
+- [ ] Criar os testes da camada de handler.
