@@ -58,11 +58,11 @@ Um CRUD feito em Go.
         - [x] Criar cliente.
         - [x] Listar todos os clientes.
         - [x] Listar um cliente específico.
-        - [ ] Atualizar um cliente específico.
+        - [x] Atualizar um cliente específico.
         - [x] Remover um cliente específico.
 - [x] Criar endpoints.
     - [x] Criar rotas.
-    - [ ] Criar handlers.
+    - [x] Criar handlers.
         - [x] Criar cliente.
         - [x] Listar todos os clientes.
         - [x] Listar um cliente específico.
@@ -71,6 +71,10 @@ Um CRUD feito em Go.
     - [x] Criar DTOs.
         - [x] Criar requests.
         - [x] Criar responses.
+- [x] Criar função de validação de CPFs.
+- [ ] Criar os testes da camada de repository.
+- [ ] Criar os testes da camada de service.
+- [ ] Criar os testes da camada de handler.
 
 # Configuração do banco de dados
 ```bash
@@ -89,13 +93,3 @@ CREATE TABLE customer (
     birthDate DATE
 );
 ```
-
-# Tasks
-- [x] Testar manualmente cada um dos métodos.
-- [x] Mudar mensagem do CPF já existente.
-- [x] Atualizar mensagens de erro.
-- [x] Mudar msg para message.
-- [x] Validar CPF no service.
-- [ ] Criar os testes da camada de repository.
-- [ ] Criar os testes da camada de service.
-- [ ] Criar os testes da camada de handler.
