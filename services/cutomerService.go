@@ -8,6 +8,7 @@ import (
 	"letscrud/endpoints/dto/response"
 	"letscrud/services/utils"
 	"log"
+	"strings"
 )
 
 type CustomerService struct {
@@ -20,16 +21,20 @@ func NewCustomerService() *CustomerService {
 	return &CustomerService{repository: repository}
 }
 
-func (cs CustomerService) CreateNewCustomer(customer request.CustomerRequest) (int64, *errs.ApiError) {
+func (cs CustomerService) CreateNewCustomer(customerRequest request.CustomerRequest) (int64, *errs.ApiError) {
 	log.Println("S [CreateNewCustomer]")
 
-	customer.CPF = utils.FormatCPF_RemovePunctuation(customer.CPF)
+	customerRequest.CPF = utils.FormatCPF_RemovePunctuation(customerRequest.CPF)
 
-	if !utils.IsValidCPF(customer.CPF) {
+	if !utils.IsValidCPF(customerRequest.CPF) {
 		return 0, errs.NewBadRequestError("O CPF informado é inválido!")
 	}
 
-	lastInsertId, apiErr := cs.repository.CreateNewCustomer(customer)
+	if !strings.Contains(strings.TrimSpace(customerRequest.Name), " ") {
+		return 0, errs.NewBadRequestError("O nome deve possuir ao menos duas palavras!")
+	}
+
+	lastInsertId, apiErr := cs.repository.CreateNewCustomer(customerRequest)
 
 	return lastInsertId, apiErr
 }
@@ -71,6 +76,10 @@ func (cs CustomerService) UpdateCustomerById(id int64, customerRequest request.C
 	log.Println("Service: UpdateCustomerById")
 
 	customerRequest.CPF = utils.FormatCPF_RemovePunctuation(customerRequest.CPF)
+
+	if !utils.IsValidCPF(customerRequest.CPF) {
+		return false, errs.NewBadRequestError("O CPF informado é inválido!")
+	}
 
 	isUpdated, apiError := cs.repository.UpdateCustomerById(id, customerRequest)
 	if apiError != nil {
