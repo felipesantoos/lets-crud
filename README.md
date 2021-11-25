@@ -72,7 +72,7 @@ Um CRUD feito em Go.
         - [x] Criar requests.
         - [x] Criar responses.
 - [x] Criar função de validação de CPFs.
-- [ ] Criar os testes da camada de repository.
+- [x] Criar os testes da camada de repository.
 - [ ] Criar os testes da camada de service.
 - [ ] Criar os testes da camada de handler.
 

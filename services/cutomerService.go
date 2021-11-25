@@ -2,7 +2,6 @@ package services
 
 import (
 	"letscrud/data/interfaces"
-	repository "letscrud/data/respository"
 	"letscrud/domain/errs"
 	"letscrud/endpoints/dto/request"
 	"letscrud/endpoints/dto/response"
@@ -15,9 +14,7 @@ type CustomerService struct {
 	repository interfaces.ICustomerRepository
 }
 
-func NewCustomerService() *CustomerService {
-	repository := repository.NewCustomerRepository()
-
+func NewCustomerService(repository interfaces.ICustomerRepository) *CustomerService {
 	return &CustomerService{repository: repository}
 }
 
@@ -34,9 +31,9 @@ func (cs CustomerService) CreateNewCustomer(customerRequest request.CustomerRequ
 		return 0, errs.NewBadRequestError("O nome deve possuir ao menos duas palavras!")
 	}
 
-	lastInsertId, apiErr := cs.repository.CreateNewCustomer(customerRequest)
+	lastInsertedId, apiErr := cs.repository.CreateNewCustomer(customerRequest)
 
-	return lastInsertId, apiErr
+	return lastInsertedId, apiErr
 }
 
 func (cs CustomerService) ReadAllCustomers() ([]response.CustomerResponse, *errs.ApiError) {

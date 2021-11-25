@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"letscrud/data/repository"
 	"letscrud/endpoints/dto/request"
 	"letscrud/services"
 	"letscrud/services/interfaces"
@@ -16,7 +17,8 @@ type CustomerHandler struct {
 }
 
 func NewCustomerHandler() *CustomerHandler {
-	service := services.NewCustomerService()
+	repo := repository.NewCustomerRepository()
+	service := services.NewCustomerService(repo)
 
 	return &CustomerHandler{service: service}
 }

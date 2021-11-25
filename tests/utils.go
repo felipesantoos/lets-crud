@@ -36,7 +36,7 @@ func SetUp(queries []string) {
 	}
 }
 
-func GetValidCustomerRequest() request.CustomerRequest {
+func GetValidCustomerRequestForRepository() request.CustomerRequest {
 	return request.CustomerRequest{
 		CPF:       "09862956046",
 		Name:      "Lyara Caparica Onofre",
@@ -57,14 +57,6 @@ func GetCustomerRequestWithBirthDateBadFormatted() request.CustomerRequest {
 		CPF:       "09862956046",
 		Name:      "Lyara Caparica Onofre",
 		BirthDate: "01/01/2001",
-	}
-}
-
-func GetCustomerRequestWithEmptyName() request.CustomerRequest {
-	return request.CustomerRequest{
-		CPF:       "09862956046",
-		Name:      "",
-		BirthDate: "2001-01-01",
 	}
 }
 
@@ -116,5 +108,61 @@ func GetCustomerRequestUpdatedWithCPFTooLong() request.CustomerRequest {
 		CPF:       "169.644.000-95",
 		Name:      "Ivanilson Fernandes Baptista",
 		BirthDate: "2003-03-03",
+	}
+}
+
+func GetCustomerRequestUpdatedWithBirthDateBadFormatted() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "16964400095",
+		Name:      "Ivanilson Fernandes Baptista",
+		BirthDate: "03/03/2003",
+	}
+}
+
+func GetCustomerRequestUpdatedWithCPFAlreadyRegistered() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "78045161000",
+		Name:      "Lyara Caparica Onofre",
+		BirthDate: "2001-01-01",
+	}
+}
+
+func GetCustomerRequestUpdatedWithIdenticalData() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "09862956046",
+		Name:      "Lyara Caparica Onofre",
+		BirthDate: "2001-01-01",
+	}
+}
+
+func GetValidCustomerRequestForService() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "098.629.560-46",
+		Name:      "Lyara Caparica Onofre",
+		BirthDate: "2001-01-01",
+	}
+}
+
+func GetCustomerRequestWithInvalidCPF() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "098.629.560-45",
+		Name:      "Lyara Caparica Onofre",
+		BirthDate: "2001-01-01",
+	}
+}
+
+func GetCustomerRequestWithEmptyName() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "098.629.560-46",
+		Name:      "",
+		BirthDate: "2001-01-01",
+	}
+}
+
+func GetCustomerRequestWithNameWithOnlyOneWord() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "098.629.560-46",
+		Name:      "Lyara",
+		BirthDate: "2001-01-01",
 	}
 }

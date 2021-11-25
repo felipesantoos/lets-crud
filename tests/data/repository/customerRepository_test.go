@@ -1,7 +1,7 @@
 package repository_test
 
 import (
-	repository "letscrud/data/respository"
+	repository "letscrud/data/repository"
 	"letscrud/domain/errs"
 	"letscrud/tests"
 	"testing"
@@ -17,7 +17,7 @@ func TestCreateNewCustomer(t *testing.T) {
 	tests.SetUp(queries)
 
 	repo := repository.NewCustomerRepository()
-	customerRequest := tests.GetValidCustomerRequest()
+	customerRequest := tests.GetValidCustomerRequestForRepository()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
 	expectedId := int64(1)
 
@@ -68,7 +68,7 @@ func TestCreateNewCustomerErrorCPFAlreadyRegistered(t *testing.T) {
 	tests.SetUp(queries)
 
 	repo := repository.NewCustomerRepository()
-	customerRequest := tests.GetValidCustomerRequest()
+	customerRequest := tests.GetValidCustomerRequestForRepository()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
 	expectedId := int64(0)
 	expectedApiError := errs.NewBadRequestError("O CPF informado já foi cadastrado no banco de dados!")
@@ -119,14 +119,14 @@ func TestReadCustomerById(t *testing.T) {
 
 	repo := repository.NewCustomerRepository()
 
-	t.Run("Customer 1", func(t *testing.T) {
+	t.Run("TestReadCustomerById1", func(t *testing.T) {
 		returnedCustomerModel, returnedApiError := repo.ReadCustomerById(1)
 		expectedCustomerModel := tests.GetExpectedCustomerModelWithId1()
 
 		assert.Equal(t, expectedCustomerModel, returnedCustomerModel)
 		assert.Nil(t, returnedApiError)
 	})
-	t.Run("Customer 2", func(t *testing.T) {
+	t.Run("TestReadCustomerById2", func(t *testing.T) {
 		returnedCustomerModel, returnedApiError := repo.ReadCustomerById(2)
 		expectedCustomerModel := tests.GetExpectedCustomerModelWithId2()
 
@@ -161,8 +161,9 @@ func TestUpdateCustomerById(t *testing.T) {
 	repo := repository.NewCustomerRepository()
 	customerRequest := tests.GetCustomerRequestUpdated()
 	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(1, customerRequest)
+	expectedIsUpdated := true
 
-	assert.Equal(t, true, returnedIsUpdated)
+	assert.Equal(t, expectedIsUpdated, returnedIsUpdated)
 	assert.Nil(t, returnedApiError)
 }
 
@@ -177,16 +178,114 @@ func TestUpdateCustomerByIdErrorCPFTooLong(t *testing.T) {
 	repo := repository.NewCustomerRepository()
 	customerRequest := tests.GetCustomerRequestUpdatedWithCPFTooLong()
 	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(1, customerRequest)
+	expectedIsUpdated := false
 	expectedApiError := errs.NewBadRequestError("O CPF informado é muito longo!")
 
-	assert.Equal(t, false, returnedIsUpdated)
+	assert.Equal(t, expectedIsUpdated, returnedIsUpdated)
 	assert.Equal(t, expectedApiError, returnedApiError)
 }
 
-/*
-	- TestUpdateCustomerByIdErrorBirthDateBadFormatted
-	- TestUpdateCustomerByIdErrorCPFAlreadyRegistered
-	- TestUpdateCustomerByIdErrorCustomerNotFound
-	- TestUpdateCustomerByIdErrorIdenticalData
-	- TestDeleteCustomerById
-*/
+func TestUpdateCustomerByIdErrorBirthDateBadFormatted(t *testing.T) {
+	queries := []string{
+		tests.CLEAR_CUSTOMER_TABLE,
+		tests.RESET_AUTO_INCREMET,
+		tests.INSERT_CUSTOMER_ID_1,
+	}
+	tests.SetUp(queries)
+
+	repo := repository.NewCustomerRepository()
+	customerRequest := tests.GetCustomerRequestUpdatedWithBirthDateBadFormatted()
+	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(1, customerRequest)
+	expectedIsUpdated := false
+	expectedApiError := errs.NewBadRequestError("A data de nascimento informada está mal formadata! Formato correto: YYYY-MM-DD.")
+
+	assert.Equal(t, expectedIsUpdated, returnedIsUpdated)
+	assert.Equal(t, expectedApiError, returnedApiError)
+}
+
+func TestUpdateCustomerByIdErrorCPFAlreadyRegistered(t *testing.T) {
+	queries := []string{
+		tests.CLEAR_CUSTOMER_TABLE,
+		tests.RESET_AUTO_INCREMET,
+		tests.INSERT_CUSTOMER_ID_1,
+		tests.INSERT_CUSTOMER_ID_2,
+	}
+	tests.SetUp(queries)
+
+	repo := repository.NewCustomerRepository()
+	customerRequest := tests.GetCustomerRequestUpdatedWithCPFAlreadyRegistered()
+	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(1, customerRequest)
+	expectedIsUpdated := false
+	expectedApiError := errs.NewBadRequestError("O CPF informado já foi cadastrado no banco de dados!")
+
+	assert.Equal(t, expectedIsUpdated, returnedIsUpdated)
+	assert.Equal(t, expectedApiError, returnedApiError)
+}
+
+func TestUpdateCustomerByIdErrorCustomerNotFound(t *testing.T) {
+	queries := []string{
+		tests.CLEAR_CUSTOMER_TABLE,
+		tests.RESET_AUTO_INCREMET,
+		tests.INSERT_CUSTOMER_ID_1,
+	}
+	tests.SetUp(queries)
+
+	repo := repository.NewCustomerRepository()
+	customerRequest := tests.GetCustomerRequestUpdated()
+	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(2, customerRequest)
+	expectedIsUpdated := false
+	expectedApiError := errs.NewBadRequestError("O cliente informado não foi encontrado ou os dados informados são idênticos aos já cadastrados!")
+
+	assert.Equal(t, expectedIsUpdated, returnedIsUpdated)
+	assert.Equal(t, expectedApiError, returnedApiError)
+}
+
+func TestUpdateCustomerByIdErrorIdenticalData(t *testing.T) {
+	queries := []string{
+		tests.CLEAR_CUSTOMER_TABLE,
+		tests.RESET_AUTO_INCREMET,
+		tests.INSERT_CUSTOMER_ID_1,
+	}
+	tests.SetUp(queries)
+
+	repo := repository.NewCustomerRepository()
+	customerRequest := tests.GetCustomerRequestUpdatedWithIdenticalData()
+	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(1, customerRequest)
+	expectedIsUpdated := false
+	expectedApiError := errs.NewBadRequestError("O cliente informado não foi encontrado ou os dados informados são idênticos aos já cadastrados!")
+
+	assert.Equal(t, expectedIsUpdated, returnedIsUpdated)
+	assert.Equal(t, expectedApiError, returnedApiError)
+}
+
+func TestDeleteCustomerById(t *testing.T) {
+	queries := []string{
+		tests.CLEAR_CUSTOMER_TABLE,
+		tests.RESET_AUTO_INCREMET,
+		tests.INSERT_CUSTOMER_ID_1,
+	}
+	tests.SetUp(queries)
+
+	repo := repository.NewCustomerRepository()
+	returnedIsDeleted, returnedApiError := repo.DeleteCustomerById(1)
+	expectedIsDeleted := true
+
+	assert.Equal(t, expectedIsDeleted, returnedIsDeleted)
+	assert.Nil(t, returnedApiError)
+}
+
+func TestDeleteCustomerByIdErrorCustomerNotFound(t *testing.T) {
+	queries := []string{
+		tests.CLEAR_CUSTOMER_TABLE,
+		tests.RESET_AUTO_INCREMET,
+		tests.INSERT_CUSTOMER_ID_1,
+	}
+	tests.SetUp(queries)
+
+	repo := repository.NewCustomerRepository()
+	returnedIsDeleted, returnedApiError := repo.DeleteCustomerById(2)
+	expectedIsDeleted := false
+
+	assert.Equal(t, expectedIsDeleted, returnedIsDeleted)
+	assert.Nil(t, returnedApiError)
+}
