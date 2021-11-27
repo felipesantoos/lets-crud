@@ -14,6 +14,6 @@ func (c Customer) ConvertToDTO() response.CustomerResponse {
 		Id:        c.Id,
 		CPF:       c.CPF,
 		Name:      c.Name,
-		Birthdate: c.BirthDate,
+		BirthDate: c.BirthDate,
 	}
 }

@@ -33,7 +33,7 @@ func TestCreateNewCustomerErrorCPFTooLong(t *testing.T) {
 	tests.SetUp(queries)
 
 	repo := repository.NewCustomerRepository()
-	customerRequest := tests.GetCustomerRequestWithCPFTooLong()
+	customerRequest := tests.GetCustomerRequestWithCPFTooLongForRepository()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
 	expectedId := int64(0)
 	expectedApiError := errs.NewBadRequestError("O CPF informado é muito longo!")

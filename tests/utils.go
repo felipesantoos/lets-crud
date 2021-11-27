@@ -4,6 +4,7 @@ import (
 	"letscrud/data/db"
 	"letscrud/domain/models"
 	"letscrud/endpoints/dto/request"
+	"letscrud/endpoints/dto/response"
 )
 
 const CLEAR_CUSTOMER_TABLE = "DELETE FROM customer WHERE id != 0"
@@ -44,9 +45,9 @@ func GetValidCustomerRequestForRepository() request.CustomerRequest {
 	}
 }
 
-func GetCustomerRequestWithCPFTooLong() request.CustomerRequest {
+func GetCustomerRequestWithCPFTooLongForRepository() request.CustomerRequest {
 	return request.CustomerRequest{
-		CPF:       "098.629.560-46",
+		CPF:       "098629560460",
 		Name:      "Lyara Caparica Onofre",
 		BirthDate: "2001-01-01",
 	}
@@ -164,5 +165,47 @@ func GetCustomerRequestWithNameWithOnlyOneWord() request.CustomerRequest {
 		CPF:       "098.629.560-46",
 		Name:      "Lyara",
 		BirthDate: "2001-01-01",
+	}
+}
+
+func GetReturnedCustomerModelList() []models.Customer {
+	return []models.Customer{
+		{
+			Id:        1,
+			CPF:       "09862956046",
+			Name:      "Lyara Caparica Onofre",
+			BirthDate: "2001-01-01",
+		},
+		{
+			Id:        2,
+			CPF:       "78045161000",
+			Name:      "Christopher Graça Sacramento",
+			BirthDate: "2002-02-02",
+		},
+	}
+}
+
+func GetExpectedCustomerResponseList() []response.CustomerResponse {
+	return []response.CustomerResponse{
+		{
+			Id:        1,
+			CPF:       "098.629.560-46",
+			Name:      "Lyara Caparica Onofre",
+			BirthDate: "2001-01-01",
+		},
+		{
+			Id:        2,
+			CPF:       "780.451.610-00",
+			Name:      "Christopher Graça Sacramento",
+			BirthDate: "2002-02-02",
+		},
+	}
+}
+
+func GetCustomerRequestWithBirthDateBadFormattedForService() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "098.629.560-46",
+		Name:      "Lyara Caparica Onofre",
+		BirthDate: "01/01/2001",
 	}
 }
