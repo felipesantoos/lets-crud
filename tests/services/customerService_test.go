@@ -140,9 +140,86 @@ func TestReadAllCustomersErrorZeroRecordsReturned(t *testing.T) {
 	assert.Equal(t, expectedApiError, returnedApiError)
 }
 
+func TestReadCustomerById(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	returnedCustomerModel := tests.GetReturnedCustomerModel()
+	repo := IMockInterfaces.NewMockICustomerRepository(controller)
+	repo.EXPECT().ReadCustomerById(gomock.Any()).Return(returnedCustomerModel, nil)
+
+	service := services.NewCustomerService(repo)
+	returnedCustomerResponse, returnedApiError := service.ReadCustomerById(1)
+	expectedCustomerResponse := tests.GetExpectedCustomerResponse()
+
+	assert.Equal(t, expectedCustomerResponse, returnedCustomerResponse)
+	assert.Nil(t, returnedApiError)
+}
+
+func TestReadCustomerByIdErrorCustomerNotFound(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	returnedApiErrorFromRepository := errs.NewBadRequestError("O cliente informado não foi encontrado!")
+	repo := IMockInterfaces.NewMockICustomerRepository(controller)
+	repo.EXPECT().ReadCustomerById(gomock.Any()).Return(nil, returnedApiErrorFromRepository)
+
+	service := services.NewCustomerService(repo)
+	returnedCustomerResponse, returnedApiError := service.ReadCustomerById(1)
+	expectedApiError := errs.NewBadRequestError("O cliente informado não foi encontrado!")
+
+	assert.Nil(t, returnedCustomerResponse)
+	assert.Equal(t, expectedApiError, returnedApiError)
+}
+
+func TestUpdateCustomerById(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	repo := IMockInterfaces.NewMockICustomerRepository(controller)
+	repo.EXPECT().UpdateCustomerById(gomock.Any(), gomock.Any()).Return(true, nil)
+
+	service := services.NewCustomerService(repo)
+	customerRequest := tests.GetCustomerRequestUpdatedForService()
+	returnedIsUpdated, returnedApiError := service.UpdateCustomerById(1, customerRequest)
+
+	assert.Equal(t, true, returnedIsUpdated)
+	assert.Nil(t, returnedApiError)
+}
+
+func TestUpdateCustomerByIdErrorInvalidCPF(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	repo := IMockInterfaces.NewMockICustomerRepository(controller)
+	service := services.NewCustomerService(repo)
+
+	customerRequest := tests.GetCustomerRequestWithInvalidCPF()
+	returnedIsUpdated, returnedApiError := service.UpdateCustomerById(1, customerRequest)
+	expectedApiError := errs.NewBadRequestError("O CPF informado é inválido!")
+
+	assert.Equal(t, false, returnedIsUpdated)
+	assert.Equal(t, expectedApiError, returnedApiError)
+}
+
+func TestUpdateCustomerByIdErrorCustomerNotFoundOrIdenticalData(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	returnedApiErrorFromRepository := errs.NewBadRequestError("O cliente informado não foi encontrado ou os dados informados são idênticos aos já cadastrados!")
+	repo := IMockInterfaces.NewMockICustomerRepository(controller)
+	repo.EXPECT().UpdateCustomerById(gomock.Any(), gomock.Any()).Return(false, returnedApiErrorFromRepository)
+
+	service := services.NewCustomerService(repo)
+	customerRequest := tests.GetValidCustomerRequestForService()
+	returnedIsUpdated, returnedApiError := service.UpdateCustomerById(1, customerRequest)
+	expectedApiError := errs.NewBadRequestError("O cliente informado não foi encontrado ou os dados informados são idênticos aos já cadastrados!")
+
+	assert.Equal(t, false, returnedIsUpdated)
+	assert.Equal(t, expectedApiError, returnedApiError)
+}
+
 /*
-	- TestReadCustomerById
-	- TestUpdateCustomerById
 	- TestDeleteCustomerById
 	- Testar removedor de pontuação.
 	- Testar adicionador de pontuação.

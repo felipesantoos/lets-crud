@@ -209,3 +209,29 @@ func GetCustomerRequestWithBirthDateBadFormattedForService() request.CustomerReq
 		BirthDate: "01/01/2001",
 	}
 }
+
+func GetReturnedCustomerModel() *models.Customer {
+	return &models.Customer{
+		Id:        1,
+		CPF:       "09862956046",
+		Name:      "Lyara Caparica Onofre",
+		BirthDate: "2001-01-01",
+	}
+}
+
+func GetExpectedCustomerResponse() *response.CustomerResponse {
+	return &response.CustomerResponse{
+		Id:        1,
+		CPF:       "098.629.560-46",
+		Name:      "Lyara Caparica Onofre",
+		BirthDate: "2001-01-01",
+	}
+}
+
+func GetCustomerRequestUpdatedForService() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "169.644.000-95",
+		Name:      "Ivanilson Fernandes Baptista",
+		BirthDate: "2003-03-03",
+	}
+}
