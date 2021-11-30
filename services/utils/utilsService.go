@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 var cpfFirstDigitTable = []int{10, 9, 8, 7, 6, 5, 4, 3, 2}
@@ -71,4 +72,14 @@ func sumDigit(s string, table []int) int {
 	}
 
 	return sum
+}
+
+func IsValidName(name string) bool {
+	for _, l := range name {
+		if !unicode.IsLetter(l) && l != ' ' {
+			return false
+		}
+	}
+
+	return true
 }

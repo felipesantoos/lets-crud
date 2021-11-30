@@ -168,6 +168,22 @@ func GetCustomerRequestWithNameWithOnlyOneWord() request.CustomerRequest {
 	}
 }
 
+func GetCustomerRequestWithNameWithSpecialCharacters() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "098.629.560-46",
+		Name:      "Lyar Caparica @nofre",
+		BirthDate: "2001-01-01",
+	}
+}
+
+func GetCustomerRequestWithNameWithNumber() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "098.629.560-46",
+		Name:      "Lyar Caparica 0nofre",
+		BirthDate: "2001-01-01",
+	}
+}
+
 func GetReturnedCustomerModelList() []models.Customer {
 	return []models.Customer{
 		{

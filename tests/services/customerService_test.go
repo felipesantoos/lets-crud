@@ -109,6 +109,33 @@ func TestCreateNewCustomerErrorNameTooShort(t *testing.T) {
 	})
 }
 
+func TestCreateNewCustomerErrorInvalidName(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	repo := IMockInterfaces.NewMockICustomerRepository(controller)
+	service := services.NewCustomerService(repo)
+
+	t.Run("TestNameWithSpecialCharacters", func(t *testing.T) {
+		customerRequest := tests.GetCustomerRequestWithNameWithSpecialCharacters()
+		returnedLastInsertedId, returnedError := service.CreateNewCustomer(customerRequest)
+		expectedLastInsertedId := int64(0)
+		expectedError := errs.NewBadRequestError("O nome só pode conter letras e espaços!")
+
+		assert.Equal(t, expectedLastInsertedId, returnedLastInsertedId)
+		assert.Equal(t, expectedError, returnedError)
+	})
+	t.Run("TestNameWithNumber", func(t *testing.T) {
+		customerRequest := tests.GetCustomerRequestWithNameWithNumber()
+		returnedLastInsertedId, returnedError := service.CreateNewCustomer(customerRequest)
+		expectedLastInsertedId := int64(0)
+		expectedError := errs.NewBadRequestError("O nome só pode conter letras e espaços!")
+
+		assert.Equal(t, expectedLastInsertedId, returnedLastInsertedId)
+		assert.Equal(t, expectedError, returnedError)
+	})
+}
+
 func TestReadAllCustomers(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
@@ -273,7 +300,3 @@ func TestDeleteCustomerByIdCustomerNotFound(t *testing.T) {
 	assert.Equal(t, false, returnedIsDeleted)
 	assert.Nil(t, returnedApiError)
 }
-
-/*
-	- Testar nome com caracteres especiais e números.
-*/

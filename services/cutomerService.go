@@ -31,6 +31,10 @@ func (cs CustomerService) CreateNewCustomer(customerRequest request.CustomerRequ
 		return 0, errs.NewBadRequestError("O nome deve possuir ao menos duas palavras!")
 	}
 
+	if !utils.IsValidName(customerRequest.Name) {
+		return 0, errs.NewBadRequestError("O nome só pode conter letras e espaços!")
+	}
+
 	lastInsertedId, apiErr := cs.repository.CreateNewCustomer(customerRequest)
 
 	return lastInsertedId, apiErr
