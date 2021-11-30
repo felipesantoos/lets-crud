@@ -9,14 +9,14 @@ import (
 var cpfFirstDigitTable = []int{10, 9, 8, 7, 6, 5, 4, 3, 2}
 var cpfSecondDigitTable = []int{11, 10, 9, 8, 7, 6, 5, 4, 3, 2}
 
-func FormatCPF_RemovePunctuation(cpf string) string {
+func FormatCPFRemovingPunctuation(cpf string) string {
 	cpf = strings.Replace(cpf, ".", "", -1)
 	cpf = strings.Replace(cpf, "-", "", -1)
 
 	return cpf
 }
 
-func FormatCPF_AddPunctuation(cpf string) string {
+func FormatCPFAddingPunctuation(cpf string) string {
 	cpf = cpf[:3] + "." + cpf[3:]
 	cpf = cpf[:7] + "." + cpf[7:]
 	cpf = cpf[:11] + "-" + cpf[11:]

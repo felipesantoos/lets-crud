@@ -235,3 +235,19 @@ func GetCustomerRequestUpdatedForService() request.CustomerRequest {
 		BirthDate: "2003-03-03",
 	}
 }
+
+func GetCustomerRequestUpdatedWithEmptyName() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "098.629.560-46",
+		Name:      "",
+		BirthDate: "2001-01-01",
+	}
+}
+
+func GetCustomerRequestUpdatedWithNameWithOnlyOneWord() request.CustomerRequest {
+	return request.CustomerRequest{
+		CPF:       "098.629.560-46",
+		Name:      "Lyara",
+		BirthDate: "2001-01-01",
+	}
+}

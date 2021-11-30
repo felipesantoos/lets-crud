@@ -219,14 +219,61 @@ func TestUpdateCustomerByIdErrorCustomerNotFoundOrIdenticalData(t *testing.T) {
 	assert.Equal(t, expectedApiError, returnedApiError)
 }
 
+func TestUpdateCustomerByIdErrorNameTooShort(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	repo := IMockInterfaces.NewMockICustomerRepository(controller)
+	service := services.NewCustomerService(repo)
+
+	t.Run("TestEmptyName", func(t *testing.T) {
+		customerRequest := tests.GetCustomerRequestUpdatedWithEmptyName()
+		returnedIsUpdated, returnedApiError := service.UpdateCustomerById(1, customerRequest)
+		expectedIsUpdated := false
+		expectedApiError := errs.NewBadRequestError("O nome deve possuir ao menos duas palavras!")
+
+		assert.Equal(t, expectedIsUpdated, returnedIsUpdated)
+		assert.Equal(t, expectedApiError, returnedApiError)
+	})
+	t.Run("TestNameWithOnlyOneWord", func(t *testing.T) {
+		customerRequest := tests.GetCustomerRequestUpdatedWithNameWithOnlyOneWord()
+		returnedIsUpdated, returnedApiError := service.UpdateCustomerById(1, customerRequest)
+		expectedIsUpdated := false
+		expectedApiError := errs.NewBadRequestError("O nome deve possuir ao menos duas palavras!")
+
+		assert.Equal(t, expectedIsUpdated, returnedIsUpdated)
+		assert.Equal(t, expectedApiError, returnedApiError)
+	})
+}
+
+func TestDeleteCustomerById(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	repo := IMockInterfaces.NewMockICustomerRepository(controller)
+	repo.EXPECT().DeleteCustomerById(gomock.Any()).Return(true, nil)
+
+	service := services.NewCustomerService(repo)
+	returnedIsDeleted, returnedApiError := service.DeleteCustomerById(1)
+
+	assert.Equal(t, true, returnedIsDeleted)
+	assert.Nil(t, returnedApiError)
+}
+
+func TestDeleteCustomerByIdCustomerNotFound(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	repo := IMockInterfaces.NewMockICustomerRepository(controller)
+	repo.EXPECT().DeleteCustomerById(gomock.Any()).Return(false, nil)
+
+	service := services.NewCustomerService(repo)
+	returnedIsDeleted, returnedApiError := service.DeleteCustomerById(1)
+
+	assert.Equal(t, false, returnedIsDeleted)
+	assert.Nil(t, returnedApiError)
+}
+
 /*
-	- TestDeleteCustomerById
-	- Testar removedor de pontuação.
-	- Testar adicionador de pontuação.
-	- Testar validade do CPF.
-	- Testar invalidade do CPF.
-	- Testar validade do nome.
-	- Testar nome vazio.
-	- Testar nome com uma única palavra.
 	- Testar nome com caracteres especiais e números.
 */

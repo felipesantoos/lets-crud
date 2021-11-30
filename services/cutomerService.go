@@ -21,7 +21,7 @@ func NewCustomerService(repository interfaces.ICustomerRepository) *CustomerServ
 func (cs CustomerService) CreateNewCustomer(customerRequest request.CustomerRequest) (int64, *errs.ApiError) {
 	log.Println("S [CreateNewCustomer]")
 
-	customerRequest.CPF = utils.FormatCPF_RemovePunctuation(customerRequest.CPF)
+	customerRequest.CPF = utils.FormatCPFRemovingPunctuation(customerRequest.CPF)
 
 	if !utils.IsValidCPF(customerRequest.CPF) {
 		return 0, errs.NewBadRequestError("O CPF informado é inválido!")
@@ -46,7 +46,7 @@ func (cs CustomerService) ReadAllCustomers() ([]response.CustomerResponse, *errs
 
 	var responseList []response.CustomerResponse
 	for _, customer := range customerList {
-		customer.CPF = utils.FormatCPF_AddPunctuation(customer.CPF)
+		customer.CPF = utils.FormatCPFAddingPunctuation(customer.CPF)
 
 		responseList = append(responseList, customer.ConvertToDTO())
 	}
@@ -62,7 +62,7 @@ func (cs CustomerService) ReadCustomerById(id int64) (*response.CustomerResponse
 		return nil, apiError
 	}
 
-	customer.CPF = utils.FormatCPF_AddPunctuation(customer.CPF)
+	customer.CPF = utils.FormatCPFAddingPunctuation(customer.CPF)
 
 	response := customer.ConvertToDTO()
 
@@ -72,10 +72,14 @@ func (cs CustomerService) ReadCustomerById(id int64) (*response.CustomerResponse
 func (cs CustomerService) UpdateCustomerById(id int64, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
 	log.Println("Service: UpdateCustomerById")
 
-	customerRequest.CPF = utils.FormatCPF_RemovePunctuation(customerRequest.CPF)
+	customerRequest.CPF = utils.FormatCPFRemovingPunctuation(customerRequest.CPF)
 
 	if !utils.IsValidCPF(customerRequest.CPF) {
 		return false, errs.NewBadRequestError("O CPF informado é inválido!")
+	}
+
+	if !strings.Contains(strings.TrimSpace(customerRequest.Name), " ") {
+		return false, errs.NewBadRequestError("O nome deve possuir ao menos duas palavras!")
 	}
 
 	isUpdated, apiError := cs.repository.UpdateCustomerById(id, customerRequest)
