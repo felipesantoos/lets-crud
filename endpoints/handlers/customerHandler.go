@@ -23,6 +23,10 @@ func NewCustomerHandler() *CustomerHandler {
 	return &CustomerHandler{service: service}
 }
 
+func NewCustomerHandlerWithCustomService(service interfaces.ICustomerService) *CustomerHandler {
+	return &CustomerHandler{service}
+}
+
 func (ch CustomerHandler) CreateNewCustomer(c echo.Context) error {
 	log.Println("H [CreateNewCustomer]")
 

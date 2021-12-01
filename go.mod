@@ -3,8 +3,9 @@ module letscrud
 go 1.17
 
 require (
-	github.com/go-sql-driver/mysql v1.6.0 // indirect
-	github.com/labstack/echo/v4 v4.6.1 // indirect
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/golang/mock v1.6.0
+	github.com/labstack/echo/v4 v4.6.1
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
@@ -19,7 +20,6 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.0 // indirect
-	github.com/golang/mock v1.6.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )
