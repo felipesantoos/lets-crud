@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"letscrud/data/db"
+	"letscrud/src/infra/mysql"
 )
 
 const CLEAR_CUSTOMER_TABLE = "DELETE FROM customer WHERE id != 0"
@@ -16,7 +16,7 @@ const INSERT_CUSTOMER_ID_2 = `
 `
 
 func SetUp(queries []string) {
-	conn, err := db.GetConnection()
+	conn, err := mysql.GetConnection()
 	if err != nil {
 		panic(err)
 	}

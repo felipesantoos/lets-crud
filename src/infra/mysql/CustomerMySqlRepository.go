@@ -1,31 +1,30 @@
-package repository
+package mysql
 
 import (
 	"fmt"
-	"letscrud/data/db"
-	"letscrud/domain/errs"
-	"letscrud/domain/models"
-	"letscrud/endpoints/dto/request"
+	"letscrud/src/api/endpoints/dto/request"
+	"letscrud/src/domain/errs"
+	"letscrud/src/domain/models"
 	"log"
 )
 
-type CustomerRepository struct{}
+type CustomerMySqlRepository struct{}
 
-func NewCustomerRepository() *CustomerRepository {
-	return &CustomerRepository{}
+func NewCustomerMySqlRepository() *CustomerMySqlRepository {
+	return &CustomerMySqlRepository{}
 }
 
-func (cr CustomerRepository) CreateNewCustomer(customerRequest request.CustomerRequest) (int64, *errs.ApiError) {
+func (cr CustomerMySqlRepository) CreateNewCustomer(customerRequest request.CustomerRequest) (int64, *errs.ApiError) {
 	log.Println("R [CreateNewCustomer]")
 
-	conn, err := db.GetConnection()
+	conn, err := getConnection()
 	if err != nil {
 		log.Println("R [CreateNewCustomer]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
 
 		return 0, apiError
 	}
-	defer conn.Close()
+	defer closeConnection(conn)
 
 	sql := "INSERT INTO customer (cpf, name, birthDate) VALUES (?, ?, ?)"
 
@@ -48,17 +47,17 @@ func (cr CustomerRepository) CreateNewCustomer(customerRequest request.CustomerR
 	return lastInsertId, nil
 }
 
-func (cr CustomerRepository) ReadAllCustomers() ([]models.Customer, *errs.ApiError) {
+func (cr CustomerMySqlRepository) ReadAllCustomers() ([]models.Customer, *errs.ApiError) {
 	log.Println("R [ReadAllCustomers]")
 
-	conn, err := db.GetConnection()
+	conn, err := getConnection()
 	if err != nil {
 		log.Println("R [ReadAllCustomers]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
 
 		return nil, apiError
 	}
-	defer conn.Close()
+	defer closeConnection(conn)
 
 	sql := "SELECT * FROM customer"
 
@@ -95,17 +94,17 @@ func (cr CustomerRepository) ReadAllCustomers() ([]models.Customer, *errs.ApiErr
 	return customerList, nil
 }
 
-func (cr CustomerRepository) ReadCustomerById(id int64) (*models.Customer, *errs.ApiError) {
+func (cr CustomerMySqlRepository) ReadCustomerById(id int64) (*models.Customer, *errs.ApiError) {
 	log.Println("R [ReadCustomerById]")
 
-	conn, err := db.GetConnection()
+	conn, err := getConnection()
 	if err != nil {
 		log.Println("R [ReadCustomerById]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
 
 		return nil, apiError
 	}
-	defer conn.Close()
+	defer closeConnection(conn)
 
 	sql := "SELECT * FROM customer WHERE id = ?"
 	res, err := conn.Query(sql, id)
@@ -137,17 +136,17 @@ func (cr CustomerRepository) ReadCustomerById(id int64) (*models.Customer, *errs
 	return customer, nil
 }
 
-func (cr CustomerRepository) UpdateCustomerById(id int64, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
+func (cr CustomerMySqlRepository) UpdateCustomerById(id int64, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
 	log.Println("R [UpdateCustomerById]")
 
-	conn, err := db.GetConnection()
+	conn, err := getConnection()
 	if err != nil {
 		log.Println("R [UpdateCustomerById]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
 
 		return false, apiError
 	}
-	defer conn.Close()
+	defer closeConnection(conn)
 
 	sql := "UPDATE customer SET CPF = ?, name = ?, birthDate = ? WHERE id = ?"
 	stmt, err := conn.Prepare(sql)
@@ -188,17 +187,17 @@ func (cr CustomerRepository) UpdateCustomerById(id int64, customerRequest reques
 	return true, nil
 }
 
-func (cr CustomerRepository) DeleteCustomerById(id int64) (bool, *errs.ApiError) {
+func (cr CustomerMySqlRepository) DeleteCustomerById(id int64) (bool, *errs.ApiError) {
 	log.Println("R [DeleteCustomerById]")
 
-	conn, err := db.GetConnection()
+	conn, err := getConnection()
 	if err != nil {
 		log.Println("R [DeleteCustomerById]: " + err.Error())
 		apiError := errs.GetCustomerError(err)
 
 		return false, apiError
 	}
-	defer conn.Close()
+	defer closeConnection(conn)
 
 	sql := "DELETE FROM customer WHERE id = ?"
 	stmt, err := conn.Prepare(sql)

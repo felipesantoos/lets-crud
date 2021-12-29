@@ -1,8 +1,8 @@
 package tests
 
 import (
-	"letscrud/domain/models"
-	"letscrud/endpoints/dto/request"
+	"letscrud/src/api/endpoints/dto/request"
+	"letscrud/src/domain/models"
 )
 
 func GetValidCustomerRequestForRepository() request.CustomerRequest {

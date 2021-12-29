@@ -1,9 +1,9 @@
 package interfaces
 
 import (
-	"letscrud/domain/errs"
-	"letscrud/domain/models"
-	"letscrud/endpoints/dto/request"
+	"letscrud/src/api/endpoints/dto/request"
+	"letscrud/src/domain/errs"
+	"letscrud/src/domain/models"
 )
 
 type ICustomerRepository interface {

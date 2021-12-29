@@ -1,6 +1,8 @@
 package models
 
-import "letscrud/endpoints/dto/response"
+import (
+	"letscrud/src/api/endpoints/dto/response"
+)
 
 type Customer struct {
 	Id        int64

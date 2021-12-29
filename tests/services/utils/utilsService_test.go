@@ -1,7 +1,7 @@
 package service_test
 
 import (
-	"letscrud/services/utils"
+	"letscrud/src/services/utils"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

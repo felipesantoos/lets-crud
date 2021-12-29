@@ -1,8 +1,8 @@
 package repository_test
 
 import (
-	repository "letscrud/data/repository"
-	"letscrud/domain/errs"
+	"letscrud/src/domain/errs"
+	repository "letscrud/src/infra/mysql"
 	"letscrud/tests"
 	"testing"
 
@@ -16,7 +16,7 @@ func TestCreateNewCustomer(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetValidCustomerRequestForRepository()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
 	expectedId := int64(1)
@@ -32,7 +32,7 @@ func TestCreateNewCustomerErrorCPFTooLong(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetCustomerRequestWithCPFTooLongForRepository()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
 	expectedId := int64(0)
@@ -49,7 +49,7 @@ func TestCreateNewCustomerErrorBirthDateBadFormatted(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetCustomerRequestWithBirthDateBadFormatted()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
 	expectedId := int64(0)
@@ -67,7 +67,7 @@ func TestCreateNewCustomerErrorCPFAlreadyRegistered(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetValidCustomerRequestForRepository()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
 	expectedId := int64(0)
@@ -86,7 +86,7 @@ func TestReadAllCustomers(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	returnedCustomerModelList, returnedApiError := repo.ReadAllCustomers()
 	expectedCustomerModelList := tests.GetExpectedCustomerModelList()
 
@@ -100,7 +100,7 @@ func TestReadAllCustomersErrorZeroRecordsReturned(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	returnedCustomerModelList, returnedApiError := repo.ReadAllCustomers()
 	expectedApiError := errs.NewBadRequestError("Nenhum registro foi retornado!")
 
@@ -117,7 +117,7 @@ func TestReadCustomerById(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 
 	t.Run("TestReadCustomerById1", func(t *testing.T) {
 		returnedCustomerModel, returnedApiError := repo.ReadCustomerById(1)
@@ -142,7 +142,7 @@ func TestReadCustomerByIdErrorCustomerNotFound(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	returnedCustomerModel, returnedApiError := repo.ReadCustomerById(1)
 	expectedApiError := errs.NewBadRequestError("O cliente informado não foi encontrado!")
 
@@ -158,7 +158,7 @@ func TestUpdateCustomerById(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetCustomerRequestUpdated()
 	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(1, customerRequest)
 	expectedIsUpdated := true
@@ -175,7 +175,7 @@ func TestUpdateCustomerByIdErrorCPFTooLong(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetCustomerRequestUpdatedWithCPFTooLong()
 	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(1, customerRequest)
 	expectedIsUpdated := false
@@ -193,7 +193,7 @@ func TestUpdateCustomerByIdErrorBirthDateBadFormatted(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetCustomerRequestUpdatedWithBirthDateBadFormatted()
 	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(1, customerRequest)
 	expectedIsUpdated := false
@@ -212,7 +212,7 @@ func TestUpdateCustomerByIdErrorCPFAlreadyRegistered(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetCustomerRequestUpdatedWithCPFAlreadyRegistered()
 	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(1, customerRequest)
 	expectedIsUpdated := false
@@ -230,7 +230,7 @@ func TestUpdateCustomerByIdErrorCustomerNotFound(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetCustomerRequestUpdated()
 	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(2, customerRequest)
 	expectedIsUpdated := false
@@ -248,7 +248,7 @@ func TestUpdateCustomerByIdErrorIdenticalData(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetCustomerRequestUpdatedWithIdenticalData()
 	returnedIsUpdated, returnedApiError := repo.UpdateCustomerById(1, customerRequest)
 	expectedIsUpdated := false
@@ -266,7 +266,7 @@ func TestDeleteCustomerById(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	returnedIsDeleted, returnedApiError := repo.DeleteCustomerById(1)
 	expectedIsDeleted := true
 
@@ -282,7 +282,7 @@ func TestDeleteCustomerByIdErrorCustomerNotFound(t *testing.T) {
 	}
 	tests.SetUp(queries)
 
-	repo := repository.NewCustomerRepository()
+	repo := repository.NewCustomerMySqlRepository()
 	returnedIsDeleted, returnedApiError := repo.DeleteCustomerById(2)
 	expectedIsDeleted := false
 

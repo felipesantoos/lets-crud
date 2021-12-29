@@ -1,9 +1,9 @@
 package interfaces
 
 import (
-	"letscrud/domain/errs"
-	"letscrud/endpoints/dto/request"
-	"letscrud/endpoints/dto/response"
+	"letscrud/src/api/endpoints/dto/request"
+	"letscrud/src/api/endpoints/dto/response"
+	"letscrud/src/domain/errs"
 )
 
 type ICustomerService interface {

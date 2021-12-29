@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"letscrud/data/repository"
-	"letscrud/endpoints/dto/request"
-	"letscrud/services"
-	"letscrud/services/interfaces"
+	"letscrud/src/api/endpoints/dto/request"
+	"letscrud/src/infra/mysql"
+	"letscrud/src/services"
+	"letscrud/src/services/interfaces"
 	"log"
 	"net/http"
 	"strconv"
@@ -17,7 +17,7 @@ type CustomerHandler struct {
 }
 
 func NewCustomerHandler() *CustomerHandler {
-	repo := repository.NewCustomerRepository()
+	repo := mysql.NewCustomerMySqlRepository()
 	service := services.NewCustomerService(repo)
 
 	return &CustomerHandler{service: service}

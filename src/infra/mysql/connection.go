@@ -1,4 +1,4 @@
-package db
+package mysql
 
 import (
 	"database/sql"
@@ -9,7 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func GetConnection() (*sql.DB, error) {
+func getConnection() (*sql.DB, error) {
 	user := "root"
 	pwd := ""
 	name := "letscrud"
@@ -27,4 +27,17 @@ func GetConnection() (*sql.DB, error) {
 	db.SetMaxIdleConns(10)
 
 	return db, nil
+}
+
+func closeConnection(conn *sql.DB) error {
+	err := conn.Close()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func GetConnection() (*sql.DB, error) {
+	return getConnection()
 }

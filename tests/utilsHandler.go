@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"letscrud/endpoints/dto/request"
+	"letscrud/src/api/endpoints/dto/request"
 	"net/http"
 	"net/http/httptest"
 	"strings"

@@ -1,9 +1,9 @@
 package tests
 
 import (
-	"letscrud/domain/models"
-	"letscrud/endpoints/dto/request"
-	"letscrud/endpoints/dto/response"
+	"letscrud/src/api/endpoints/dto/request"
+	"letscrud/src/api/endpoints/dto/response"
+	"letscrud/src/domain/models"
 )
 
 func GetValidCustomerRequestForService() request.CustomerRequest {

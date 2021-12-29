@@ -1,7 +1,7 @@
 package main
 
 import (
-	"letscrud/endpoints/routes"
+	"letscrud/src/api/endpoints/routes"
 )
 
 func main() {

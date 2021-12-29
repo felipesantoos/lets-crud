@@ -2,9 +2,9 @@ package handlers_test
 
 import (
 	"encoding/json"
-	"letscrud/endpoints/handlers"
+	"letscrud/src/api/endpoints/handlers"
 	"letscrud/tests"
-	IMockInterfaces "letscrud/tests/mock/services"
+	IMockInterfaces "letscrud/tests/mock/services/interfaces"
 	"net/http"
 	"testing"
 

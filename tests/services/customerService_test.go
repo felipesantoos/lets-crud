@@ -1,10 +1,10 @@
 package services_test
 
 import (
-	"letscrud/domain/errs"
-	"letscrud/services"
+	"letscrud/src/domain/errs"
+	"letscrud/src/services"
 	"letscrud/tests"
-	IMockInterfaces "letscrud/tests/mock/repository"
+	IMockInterfaces "letscrud/tests/mock/services/repositories"
 	"testing"
 
 	"github.com/golang/mock/gomock"

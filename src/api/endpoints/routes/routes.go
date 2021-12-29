@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"letscrud/endpoints/handlers"
+	"letscrud/src/api/endpoints/handlers"
 
 	"github.com/labstack/echo/v4"
 )
