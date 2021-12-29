@@ -7,9 +7,9 @@ import (
 )
 
 type ICustomerRepository interface {
-	CreateNewCustomer(customerRequest request.CustomerRequest) (int64, *errs.ApiError)
+	CreateNewCustomer(customerRequest request.CustomerRequest) (int, *errs.ApiError)
 	ReadAllCustomers() ([]models.Customer, *errs.ApiError)
-	ReadCustomerById(id int64) (*models.Customer, *errs.ApiError)
-	UpdateCustomerById(id int64, customerRequest request.CustomerRequest) (bool, *errs.ApiError)
-	DeleteCustomerById(id int64) (bool, *errs.ApiError)
+	ReadCustomerById(id int) (*models.Customer, *errs.ApiError)
+	UpdateCustomerById(id int, customerRequest request.CustomerRequest) (bool, *errs.ApiError)
+	DeleteCustomerById(id int) (bool, *errs.ApiError)
 }

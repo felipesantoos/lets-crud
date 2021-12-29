@@ -18,7 +18,7 @@ func NewCustomerService(repository interfaces.ICustomerRepository) *CustomerServ
 	return &CustomerService{repository: repository}
 }
 
-func (cs CustomerService) CreateNewCustomer(customerRequest request.CustomerRequest) (int64, *errs.ApiError) {
+func (cs CustomerService) CreateNewCustomer(customerRequest request.CustomerRequest) (int, *errs.ApiError) {
 	log.Println("S [CreateNewCustomer]")
 
 	customerRequest.CPF = utils.FormatCPFRemovingPunctuation(customerRequest.CPF)
@@ -58,7 +58,7 @@ func (cs CustomerService) ReadAllCustomers() ([]response.CustomerResponse, *errs
 	return responseList, apiErr
 }
 
-func (cs CustomerService) ReadCustomerById(id int64) (*response.CustomerResponse, *errs.ApiError) {
+func (cs CustomerService) ReadCustomerById(id int) (*response.CustomerResponse, *errs.ApiError) {
 	log.Println("S [ReadCustomerById]")
 
 	customer, apiError := cs.repository.ReadCustomerById(id)
@@ -73,7 +73,7 @@ func (cs CustomerService) ReadCustomerById(id int64) (*response.CustomerResponse
 	return &response, nil
 }
 
-func (cs CustomerService) UpdateCustomerById(id int64, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
+func (cs CustomerService) UpdateCustomerById(id int, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
 	log.Println("Service: UpdateCustomerById")
 
 	customerRequest.CPF = utils.FormatCPFRemovingPunctuation(customerRequest.CPF)
@@ -94,7 +94,7 @@ func (cs CustomerService) UpdateCustomerById(id int64, customerRequest request.C
 	return isUpdated, nil
 }
 
-func (cs CustomerService) DeleteCustomerById(id int64) (bool, *errs.ApiError) {
+func (cs CustomerService) DeleteCustomerById(id int) (bool, *errs.ApiError) {
 	log.Println("Service: DeleteCustomerById")
 
 	isDeleted, apiError := cs.repository.DeleteCustomerById(id)

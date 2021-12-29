@@ -35,9 +35,9 @@ func (_m *MockICustomerRepository) EXPECT() *MockICustomerRepositoryMockRecorder
 }
 
 // CreateNewCustomer mocks base method
-func (_m *MockICustomerRepository) CreateNewCustomer(customerRequest request.CustomerRequest) (int64, *errs.ApiError) {
+func (_m *MockICustomerRepository) CreateNewCustomer(customerRequest request.CustomerRequest) (int, *errs.ApiError) {
 	ret := _m.ctrl.Call(_m, "CreateNewCustomer", customerRequest)
-	ret0, _ := ret[0].(int64)
+	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(*errs.ApiError)
 	return ret0, ret1
 }
@@ -61,7 +61,7 @@ func (_mr *MockICustomerRepositoryMockRecorder) ReadAllCustomers() *gomock.Call 
 }
 
 // ReadCustomerById mocks base method
-func (_m *MockICustomerRepository) ReadCustomerById(id int64) (*models.Customer, *errs.ApiError) {
+func (_m *MockICustomerRepository) ReadCustomerById(id int) (*models.Customer, *errs.ApiError) {
 	ret := _m.ctrl.Call(_m, "ReadCustomerById", id)
 	ret0, _ := ret[0].(*models.Customer)
 	ret1, _ := ret[1].(*errs.ApiError)
@@ -74,7 +74,7 @@ func (_mr *MockICustomerRepositoryMockRecorder) ReadCustomerById(arg0 interface{
 }
 
 // UpdateCustomerById mocks base method
-func (_m *MockICustomerRepository) UpdateCustomerById(id int64, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
+func (_m *MockICustomerRepository) UpdateCustomerById(id int, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
 	ret := _m.ctrl.Call(_m, "UpdateCustomerById", id, customerRequest)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(*errs.ApiError)
@@ -87,7 +87,7 @@ func (_mr *MockICustomerRepositoryMockRecorder) UpdateCustomerById(arg0, arg1 in
 }
 
 // DeleteCustomerById mocks base method
-func (_m *MockICustomerRepository) DeleteCustomerById(id int64) (bool, *errs.ApiError) {
+func (_m *MockICustomerRepository) DeleteCustomerById(id int) (bool, *errs.ApiError) {
 	ret := _m.ctrl.Call(_m, "DeleteCustomerById", id)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(*errs.ApiError)

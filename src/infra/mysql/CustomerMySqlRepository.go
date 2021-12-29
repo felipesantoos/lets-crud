@@ -14,7 +14,7 @@ func NewCustomerMySqlRepository() *CustomerMySqlRepository {
 	return &CustomerMySqlRepository{}
 }
 
-func (cr CustomerMySqlRepository) CreateNewCustomer(customerRequest request.CustomerRequest) (int64, *errs.ApiError) {
+func (cr CustomerMySqlRepository) CreateNewCustomer(customerRequest request.CustomerRequest) (int, *errs.ApiError) {
 	log.Println("R [CreateNewCustomer]")
 
 	conn, err := getConnection()
@@ -44,7 +44,9 @@ func (cr CustomerMySqlRepository) CreateNewCustomer(customerRequest request.Cust
 		return 0, apiError
 	}
 
-	return lastInsertId, nil
+	id := int(lastInsertId)
+
+	return id, nil
 }
 
 func (cr CustomerMySqlRepository) ReadAllCustomers() ([]models.Customer, *errs.ApiError) {
@@ -94,7 +96,7 @@ func (cr CustomerMySqlRepository) ReadAllCustomers() ([]models.Customer, *errs.A
 	return customerList, nil
 }
 
-func (cr CustomerMySqlRepository) ReadCustomerById(id int64) (*models.Customer, *errs.ApiError) {
+func (cr CustomerMySqlRepository) ReadCustomerById(id int) (*models.Customer, *errs.ApiError) {
 	log.Println("R [ReadCustomerById]")
 
 	conn, err := getConnection()
@@ -136,7 +138,7 @@ func (cr CustomerMySqlRepository) ReadCustomerById(id int64) (*models.Customer, 
 	return customer, nil
 }
 
-func (cr CustomerMySqlRepository) UpdateCustomerById(id int64, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
+func (cr CustomerMySqlRepository) UpdateCustomerById(id int, customerRequest request.CustomerRequest) (bool, *errs.ApiError) {
 	log.Println("R [UpdateCustomerById]")
 
 	conn, err := getConnection()
@@ -187,7 +189,7 @@ func (cr CustomerMySqlRepository) UpdateCustomerById(id int64, customerRequest r
 	return true, nil
 }
 
-func (cr CustomerMySqlRepository) DeleteCustomerById(id int64) (bool, *errs.ApiError) {
+func (cr CustomerMySqlRepository) DeleteCustomerById(id int) (bool, *errs.ApiError) {
 	log.Println("R [DeleteCustomerById]")
 
 	conn, err := getConnection()
