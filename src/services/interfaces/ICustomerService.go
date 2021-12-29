@@ -7,9 +7,9 @@ import (
 )
 
 type ICustomerService interface {
-	CreateNewCustomer(customerResquest request.CustomerRequest) (int64, *errs.ApiError)
+	CreateNewCustomer(customerResquest request.CustomerRequest) (int, *errs.ApiError)
 	ReadAllCustomers() ([]response.CustomerResponse, *errs.ApiError)
-	ReadCustomerById(id int64) (*response.CustomerResponse, *errs.ApiError)
-	UpdateCustomerById(id int64, customerRequest request.CustomerRequest) (bool, *errs.ApiError)
-	DeleteCustomerById(id int64) (bool, *errs.ApiError)
+	ReadCustomerById(id int) (*response.CustomerResponse, *errs.ApiError)
+	UpdateCustomerById(id int, customerRequest request.CustomerRequest) (bool, *errs.ApiError)
+	DeleteCustomerById(id int) (bool, *errs.ApiError)
 }

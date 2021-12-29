@@ -16,7 +16,7 @@ func TestCreateNewCustomer(t *testing.T) {
 	defer controller.Finish()
 
 	service := IMockInterfaces.NewMockICustomerService(controller)
-	service.EXPECT().CreateNewCustomer(gomock.Any()).Return(int64(1), nil)
+	service.EXPECT().CreateNewCustomer(gomock.Any()).Return(int(1), nil)
 	handler := handlers.NewCustomerHandlerWithCustomService(service)
 
 	requestedJSON, _ := json.Marshal(tests.GetValidCustomerRequestForHandler())

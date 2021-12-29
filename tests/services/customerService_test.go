@@ -15,7 +15,7 @@ func TestCreateNewCustomer(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 
-	expectedLastInsertedIdFromRepository := int64(1)
+	expectedLastInsertedIdFromRepository := int(1)
 	repo := IMockInterfaces.NewMockICustomerRepository(controller)
 	repo.EXPECT().CreateNewCustomer(gomock.Any()).Return(
 		expectedLastInsertedIdFromRepository,
@@ -25,7 +25,7 @@ func TestCreateNewCustomer(t *testing.T) {
 	service := services.NewCustomerService(repo)
 	customerRequest := tests.GetValidCustomerRequestForService()
 	returnedLastInsertedId, returnedApiError := service.CreateNewCustomer(customerRequest)
-	expectedLastInsertedId := int64(1)
+	expectedLastInsertedId := int(1)
 
 	assert.Equal(t, expectedLastInsertedId, returnedLastInsertedId)
 	assert.Nil(t, returnedApiError)
@@ -39,7 +39,7 @@ func TestCreateNewCustomerErrorInvalidCPF(t *testing.T) {
 
 	customerRequest := tests.GetCustomerRequestWithInvalidCPF()
 	returnedLastInsertedId, returnedApiError := service.CreateNewCustomer(customerRequest)
-	expectedLastInsertedId := int64(0)
+	expectedLastInsertedId := int(0)
 	expectedApiError := errs.NewBadRequestError("O CPF informado é inválido!")
 
 	assert.Equal(t, expectedLastInsertedId, returnedLastInsertedId)
@@ -52,12 +52,12 @@ func TestCreateNewCustomerErrorBirthDateBadFormatted(t *testing.T) {
 
 	returnedApiErrorFromRepository := errs.NewBadRequestError("A data de nascimento informada está mal formadata! Formato correto: YYYY-MM-DD.")
 	repo := IMockInterfaces.NewMockICustomerRepository(controller)
-	repo.EXPECT().CreateNewCustomer(gomock.Any()).Return(int64(0), returnedApiErrorFromRepository)
+	repo.EXPECT().CreateNewCustomer(gomock.Any()).Return(int(0), returnedApiErrorFromRepository)
 
 	service := services.NewCustomerService(repo)
 	customerRequest := tests.GetCustomerRequestWithBirthDateBadFormattedForService()
 	returnedLastInsertedId, returnedApiError := service.CreateNewCustomer(customerRequest)
-	expectedLastInsertedId := int64(0)
+	expectedLastInsertedId := int(0)
 	expectedApiError := errs.NewBadRequestError("A data de nascimento informada está mal formadata! Formato correto: YYYY-MM-DD.")
 
 	assert.Equal(t, expectedLastInsertedId, returnedLastInsertedId)
@@ -70,12 +70,12 @@ func TestCreateNewCustomerErrorCPFAlreadyRegistered(t *testing.T) {
 
 	returnedApiErrorFromRepository := errs.NewBadRequestError("O CPF informado já foi cadastrado no banco de dados!")
 	repo := IMockInterfaces.NewMockICustomerRepository(controller)
-	repo.EXPECT().CreateNewCustomer(gomock.Any()).Return(int64(0), returnedApiErrorFromRepository)
+	repo.EXPECT().CreateNewCustomer(gomock.Any()).Return(int(0), returnedApiErrorFromRepository)
 
 	service := services.NewCustomerService(repo)
 	customerRequest := tests.GetValidCustomerRequestForService()
 	returnedLastInsertedId, returnedApiError := service.CreateNewCustomer(customerRequest)
-	expectedLastInsertedId := int64(0)
+	expectedLastInsertedId := int(0)
 	expectedApiError := errs.NewBadRequestError("O CPF informado já foi cadastrado no banco de dados!")
 
 	assert.Equal(t, expectedLastInsertedId, returnedLastInsertedId)
@@ -92,7 +92,7 @@ func TestCreateNewCustomerErrorNameTooShort(t *testing.T) {
 	t.Run("TestEmptyName", func(t *testing.T) {
 		customerRequest := tests.GetCustomerRequestWithEmptyName()
 		returnedLastInsertedId, returnedApiError := service.CreateNewCustomer(customerRequest)
-		expectedLastInsertedId := int64(0)
+		expectedLastInsertedId := int(0)
 		expectedApiError := errs.NewBadRequestError("O nome deve possuir ao menos duas palavras!")
 
 		assert.Equal(t, expectedLastInsertedId, returnedLastInsertedId)
@@ -101,7 +101,7 @@ func TestCreateNewCustomerErrorNameTooShort(t *testing.T) {
 	t.Run("TestNameWithOnlyOneWord", func(t *testing.T) {
 		customerRequest := tests.GetCustomerRequestWithNameWithOnlyOneWord()
 		returnedLastInsertedId, returnedApiError := service.CreateNewCustomer(customerRequest)
-		expectedLastInsertedId := int64(0)
+		expectedLastInsertedId := int(0)
 		expectedApiError := errs.NewBadRequestError("O nome deve possuir ao menos duas palavras!")
 
 		assert.Equal(t, expectedLastInsertedId, returnedLastInsertedId)
@@ -119,7 +119,7 @@ func TestCreateNewCustomerErrorInvalidName(t *testing.T) {
 	t.Run("TestNameWithSpecialCharacters", func(t *testing.T) {
 		customerRequest := tests.GetCustomerRequestWithNameWithSpecialCharacters()
 		returnedLastInsertedId, returnedError := service.CreateNewCustomer(customerRequest)
-		expectedLastInsertedId := int64(0)
+		expectedLastInsertedId := int(0)
 		expectedError := errs.NewBadRequestError("O nome só pode conter letras e espaços!")
 
 		assert.Equal(t, expectedLastInsertedId, returnedLastInsertedId)
@@ -128,7 +128,7 @@ func TestCreateNewCustomerErrorInvalidName(t *testing.T) {
 	t.Run("TestNameWithNumber", func(t *testing.T) {
 		customerRequest := tests.GetCustomerRequestWithNameWithNumber()
 		returnedLastInsertedId, returnedError := service.CreateNewCustomer(customerRequest)
-		expectedLastInsertedId := int64(0)
+		expectedLastInsertedId := int(0)
 		expectedError := errs.NewBadRequestError("O nome só pode conter letras e espaços!")
 
 		assert.Equal(t, expectedLastInsertedId, returnedLastInsertedId)

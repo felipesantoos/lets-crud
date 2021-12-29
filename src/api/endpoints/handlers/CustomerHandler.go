@@ -70,7 +70,7 @@ func (ch CustomerHandler) ReadAllCustomers(c echo.Context) error {
 func (ch CustomerHandler) ReadCustomerById(c echo.Context) error {
 	log.Println("H [ReadCustomerById]")
 
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		log.Println("H [ReadCustomerById]: " + err.Error())
 		response := map[string]string{
@@ -95,7 +95,7 @@ func (ch CustomerHandler) ReadCustomerById(c echo.Context) error {
 func (ch CustomerHandler) UpdateCustomerById(c echo.Context) error {
 	log.Println("H [UpdateCustomerById]")
 
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		log.Println("H [UpdateCustomerById]: " + err.Error())
 
@@ -136,7 +136,7 @@ func (ch CustomerHandler) UpdateCustomerById(c echo.Context) error {
 func (ch CustomerHandler) DeleteCustomerById(c echo.Context) error {
 	log.Println("H [DeleteCustomerById]")
 
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		log.Println("H [DeleteCustomerById]: " + err.Error())
 	}

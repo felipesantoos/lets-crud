@@ -19,7 +19,7 @@ func TestCreateNewCustomer(t *testing.T) {
 	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetValidCustomerRequestForRepository()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
-	expectedId := int64(1)
+	expectedId := int(1)
 
 	assert.Equal(t, expectedId, returnedId)
 	assert.Nil(t, returnedApiError)
@@ -35,7 +35,7 @@ func TestCreateNewCustomerErrorCPFTooLong(t *testing.T) {
 	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetCustomerRequestWithCPFTooLongForRepository()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
-	expectedId := int64(0)
+	expectedId := int(0)
 	expectedApiError := errs.NewBadRequestError("O CPF informado é muito longo!")
 
 	assert.Equal(t, expectedId, returnedId)
@@ -52,7 +52,7 @@ func TestCreateNewCustomerErrorBirthDateBadFormatted(t *testing.T) {
 	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetCustomerRequestWithBirthDateBadFormatted()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
-	expectedId := int64(0)
+	expectedId := int(0)
 	expectedApiError := errs.NewBadRequestError("A data de nascimento informada está mal formadata! Formato correto: YYYY-MM-DD.")
 
 	assert.Equal(t, expectedId, returnedId)
@@ -70,7 +70,7 @@ func TestCreateNewCustomerErrorCPFAlreadyRegistered(t *testing.T) {
 	repo := repository.NewCustomerMySqlRepository()
 	customerRequest := tests.GetValidCustomerRequestForRepository()
 	returnedId, returnedApiError := repo.CreateNewCustomer(customerRequest)
-	expectedId := int64(0)
+	expectedId := int(0)
 	expectedApiError := errs.NewBadRequestError("O CPF informado já foi cadastrado no banco de dados!")
 
 	assert.Equal(t, expectedId, returnedId)
